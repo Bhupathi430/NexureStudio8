@@ -6,6 +6,9 @@
     <title>Nexure Studios | Premium Creative Technology & Software Engineering</title>
     <meta name="description" content="Nexure Studios is a luxury creative agency crafting future-ready digital experiences, AI solutions, web applications, and immersive 3D interfaces.">
     
+    <!-- Google Identity Services (GIS) SDK -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <!-- Google Fonts: Outfit (Headings) & Inter (Body) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,8 +51,28 @@
             --radius-lg: 24px;
             --radius-md: 16px;
             --radius-sm: 8px;
-            --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-fast: all 0.25s ease-out;
+            --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Premium Dark Theme Variable Overrides */
+        [data-theme="dark"] {
+            --bg-primary: #090d16;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            --glass-shadow-hover: 0 20px 60px rgba(0, 82, 255, 0.15);
+        }
+
+        /* Smooth transit state for theme toggling */
+        body {
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* Base Styles */
@@ -184,6 +207,25 @@
             justify-content: center;
             align-items: center;
             z-index: 10000;
+            overflow: hidden;
+        }
+
+        .preloader-bg-glow {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 82, 255, 0.08) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { width: 500px; height: 500px; opacity: 0.6; }
+            50% { width: 700px; height: 700px; opacity: 1; }
         }
 
         .preloader-content {
@@ -378,16 +420,60 @@
         }
 
         .logo-dot {
-            width: 7px;
-            height: 7px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             display: inline-block;
+            box-shadow: 0 0 2px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
 
-        .dot-blue { background-color: #5c6bc0; }
-        .dot-red { background-color: #ef5350; }
-        .dot-gray { background-color: #bdbdbd; }
-        .dot-green { background-color: #26a69a; }
+        .dot-blue {
+            background-color: #0052ff;
+            animation: pulse-blue 2s infinite ease-in-out;
+        }
+        .dot-red {
+            background-color: #ef5350;
+            animation: pulse-red 2s infinite ease-in-out 0.5s;
+        }
+        .dot-gray {
+            background-color: #94a3b8;
+            animation: pulse-gray 2s infinite ease-in-out 1s;
+        }
+        .dot-green {
+            background-color: #26a69a;
+            animation: pulse-green 2s infinite ease-in-out 1.5s;
+        }
+
+        @keyframes pulse-blue {
+            0%, 100% { box-shadow: 0 0 2px rgba(0, 82, 255, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 8px rgba(0, 82, 255, 0.8), 0 0 16px rgba(0, 82, 255, 0.6); filter: brightness(1.2); }
+        }
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 2px rgba(239, 83, 80, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 8px rgba(239, 83, 80, 0.8), 0 0 16px rgba(239, 83, 80, 0.6); filter: brightness(1.2); }
+        }
+        @keyframes pulse-gray {
+            0%, 100% { box-shadow: 0 0 2px rgba(148, 163, 184, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 8px rgba(148, 163, 184, 0.8), 0 0 16px rgba(148, 163, 184, 0.6); filter: brightness(1.2); }
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 2px rgba(38, 166, 154, 0.4); filter: brightness(1); }
+            50% { box-shadow: 0 0 8px rgba(38, 166, 154, 0.8), 0 0 16px rgba(38, 166, 154, 0.6); filter: brightness(1.2); }
+        }
+
+        .logo:hover .logo-dot {
+            animation: fast-sweep 0.4s infinite alternate;
+        }
+        .logo:hover .dot-blue { animation-delay: 0.05s; }
+        .logo:hover .dot-red { animation-delay: 0.1s; }
+        .logo:hover .dot-gray { animation-delay: 0.15s; }
+        .logo:hover .dot-green { animation-delay: 0.2s; }
+
+        @keyframes fast-sweep {
+            0% { transform: scale(1); filter: brightness(1); }
+            100% { transform: scale(1.3); filter: brightness(1.4); box-shadow: 0 0 10px currentColor; }
+        }
 
         .logo-sub-text {
             font-family: var(--font-heading);
@@ -396,6 +482,50 @@
             color: var(--text-primary);
             letter-spacing: 0.5px;
             text-transform: uppercase;
+        }
+
+        .google-login-wrap {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .user-profile-chip {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 82, 255, 0.04);
+            border: 1px solid rgba(0, 82, 255, 0.12);
+            padding: 4px 12px 4px 4px;
+            border-radius: 50px;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .user-profile-chip img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #ffffff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .user-profile-chip span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-profile-chip .logout-btn {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding-left: 8px;
+            margin-left: 4px;
+            border-left: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.15s ease;
+        }
+
+        .user-profile-chip .logout-btn:hover {
+            color: var(--color-purple);
         }
 
         .nav-links {
@@ -2291,12 +2421,221 @@
             opacity: 0;
             transform: translateY(30px);
         }
+
+        /* Dark Mode Toggler Styling */
+        .theme-toggle {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.15rem;
+            cursor: pointer;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+            background-color: var(--bg-tertiary);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            transform: scale(1.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+        
+        [data-theme="dark"] .theme-toggle {
+            background-color: var(--bg-tertiary);
+            border-color: rgba(255,255,255,0.05);
+        }
+
+        /* Single Featured Pricing Card */
+        .single-featured-card {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 40px !important;
+            border-color: rgba(0, 82, 255, 0.15) !important;
+            box-shadow: 0 15px 50px rgba(0, 82, 255, 0.04) !important;
+        }
+        
+        .pricing-split-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            width: 100%;
+            margin: 24px 0;
+            text-align: left;
+        }
+        
+        .price-period {
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 25px;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .pricing-split-features {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+        }
+
+        /* Login Modal Overlays */
+        .login-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 11000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .login-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .login-modal-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            position: relative;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.15);
+            text-align: center;
+            transform: scale(0.92);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .login-modal-overlay.active .login-modal-card {
+            transform: scale(1);
+        }
+        
+        .login-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+        }
+        
+        .login-modal-close:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .login-modal-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .login-modal-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        
+        .login-modal-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .login-modal-section h3, .login-modal-form h3 {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        
+        .login-modal-divider {
+            position: relative;
+            margin: 24px 0;
+            text-align: center;
+        }
+        
+        .login-modal-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: rgba(0,0,0,0.06);
+            z-index: 1;
+        }
+        
+        [data-theme="dark"] .login-modal-divider::before {
+            background-color: rgba(255,255,255,0.06);
+        }
+        
+        .login-modal-divider span {
+            background-color: var(--bg-primary);
+            padding: 0 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .login-modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        /* Fallback avatar indicator */
+        .avatar-fallback {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--grad-blue-purple);
+            color: #ffffff;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
 
     <!-- PRELOADER -->
     <div id="preloader" class="preloader">
+        <div class="preloader-bg-glow"></div>
         <div class="preloader-content">
             <div class="preloader-logo">
                 <span class="logo-main-text">Nexure</span>
@@ -2354,8 +2693,26 @@
                 <a href="#services" class="nav-item hover-interactive" data-page="services">Services</a>
                 <a href="#portfolio" class="nav-item hover-interactive" data-page="portfolio">Portfolio</a>
                 <a href="#pricing" class="nav-item hover-interactive" data-page="pricing">Pricing</a>
-                <a href="#careers" class="nav-item hover-interactive" data-page="careers">Careers</a>
-                <a href="#blog" class="nav-item hover-interactive" data-page="blog">Blog</a>
+                
+                <!-- Sign In Trigger Button -->
+                <button id="header-signin-btn" class="btn btn-outline hover-interactive" data-cursor="btn" onclick="openLoginModal()" style="padding: 6px 18px; font-size: 0.85rem; height: 36px; display: inline-flex; align-items: center; gap: 6px;">
+                    Sign In <i class="fa-solid fa-right-to-bracket"></i>
+                </button>
+                
+                <!-- Logged In User Profile Chip -->
+                <div id="user-profile-chip" class="user-profile-chip">
+                    <div id="user-avatar-container" style="display: flex; align-items: center; justify-content: center;">
+                        <img id="user-avatar" src="" alt="User Avatar" style="display: none;">
+                    </div>
+                    <span id="user-name">Guest</span>
+                    <i class="fa-solid fa-right-from-bracket logout-btn hover-interactive" id="google-logout-btn" data-cursor="click" title="Sign Out"></i>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button id="theme-toggle" class="theme-toggle hover-interactive" data-cursor="click" aria-label="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+
                 <a href="#contact" class="btn btn-nav hover-interactive" data-cursor="btn" data-page="contact">Let's Talk</a>
             </nav>
 
@@ -2375,8 +2732,26 @@
             <a href="#services" class="mobile-link" data-page="services">Services</a>
             <a href="#portfolio" class="mobile-link" data-page="portfolio">Portfolio</a>
             <a href="#pricing" class="mobile-link" data-page="pricing">Pricing</a>
-            <a href="#careers" class="mobile-link" data-page="careers">Careers</a>
-            <a href="#blog" class="mobile-link" data-page="blog">Blog</a>
+            
+            <!-- Mobile Sign In Button -->
+            <button id="mobile-signin-btn" class="mobile-link" onclick="openLoginModal()" style="background: transparent; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;">
+                Sign In <i class="fa-solid fa-right-to-bracket"></i>
+            </button>
+            
+            <!-- Mobile User Profile Chip -->
+            <div id="user-profile-chip-mobile" class="user-profile-chip" style="margin-top: 10px; display: none;">
+                <div id="user-avatar-container-mobile" style="display: flex; align-items: center; justify-content: center;">
+                    <img id="user-avatar-mobile" src="" alt="User Avatar" style="display: none;">
+                </div>
+                <span id="user-name-mobile" style="color: var(--text-primary);">Guest</span>
+                <i class="fa-solid fa-right-from-bracket logout-btn" id="google-logout-btn-mobile" title="Sign Out" style="margin-left: 10px; cursor: pointer; color: var(--text-muted);"></i>
+            </div>
+
+            <!-- Mobile Theme Toggle -->
+            <button id="theme-toggle-mobile" class="theme-toggle hover-interactive" style="margin-top: 10px;" data-cursor="click" aria-label="Toggle Theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+
             <a href="#contact" class="mobile-btn" data-page="contact">Let's Talk</a>
         </div>
     </div>
@@ -2502,19 +2877,19 @@
                         <div class="project-featured-card glass-element reveal-scroll">
                             <div class="project-featured-image">
                                 <div class="project-img-placeholder gradient-bg-blue">
-                                    <i class="fa-solid fa-network-wired proj-large-icon"></i>
+                                    <i class="fa-solid fa-cookie-bite proj-large-icon"></i>
                                 </div>
-                                <div class="project-tag">SaaS / Cloud Analytics</div>
+                                <div class="project-tag">E-Commerce / Luxury Retail</div>
                             </div>
                             <div class="project-featured-content">
-                                <span class="project-client">Aether Platform</span>
-                                <h3>Cloud orchestration and infrastructure monitoring dashboard.</h3>
-                                <p>A high-performance cloud panel featuring real-time data streaming, GPU-accelerated graphs, and intelligent anomaly detection models.</p>
+                                <span class="project-client">Alluraiah Sweets</span>
+                                <h3>Traditional sweets house premium e-commerce platform.</h3>
+                                <p>A high-performance digital store featuring real-time custom box styling, fast checkout pipelines, and catalog visuals that capture luxury dining.</p>
                                 <div class="project-tech-tags">
+                                    <span>Next.js</span>
                                     <span>React</span>
-                                    <span>TypeScript</span>
-                                    <span>WebGL</span>
-                                    <span>AWS</span>
+                                    <span>Tailwind CSS</span>
+                                    <span>Vercel</span>
                                 </div>
                                 <a href="#portfolio" class="btn btn-outline hover-interactive" data-page="portfolio">Explore Case Study <i class="fa-solid fa-chevron-right"></i></a>
                             </div>
@@ -2524,19 +2899,19 @@
                         <div class="project-featured-card glass-element reveal-scroll reverse-row">
                             <div class="project-featured-image">
                                 <div class="project-img-placeholder gradient-bg-purple">
-                                    <i class="fa-solid fa-sparkles proj-large-icon"></i>
+                                    <i class="fa-solid fa-utensils proj-large-icon"></i>
                                 </div>
-                                <div class="project-tag">AI / Machine Learning</div>
+                                <div class="project-tag">Digital Menu / Booking</div>
                             </div>
                             <div class="project-featured-content">
-                                <span class="project-client">Veridian AI</span>
-                                <h3>Automated content personalization engine.</h3>
-                                <p>An enterprise machine learning tool that leverages customized transformer models to generate dynamic user experiences in real-time.</p>
+                                <span class="project-client">AFC Restaurant</span>
+                                <h3>High-speed digital reservation and menu customization interface.</h3>
+                                <p>An interactive customer portal with smooth table bookings, digital menu cards, and dynamic chef recommendations matching user profiles.</p>
                                 <div class="project-tech-tags">
-                                    <span>Python</span>
-                                    <span>PyTorch</span>
-                                    <span>Next.js</span>
-                                    <span>Docker</span>
+                                    <span>React</span>
+                                    <span>Node.js</span>
+                                    <span>MongoDB</span>
+                                    <span>GSAP</span>
                                 </div>
                                 <a href="#portfolio" class="btn btn-outline hover-interactive" data-page="portfolio">Explore Case Study <i class="fa-solid fa-chevron-right"></i></a>
                             </div>
@@ -2739,23 +3114,24 @@
             <section class="stats-section section-padding bg-light-gray border-bottom">
                 <div class="container grid-4 reveal-scroll">
                     <div class="stat-counter-card text-center">
-                        <span class="stat-number" data-count="94">0</span>
-                        <span class="stat-label">Enterprise Builds</span>
+                        <span class="stat-number" data-count="10">0</span>
+                        <span class="stat-suffix">+</span>
+                        <span class="stat-label">Satisfied Clients</span>
+                    </div>
+                    <div class="stat-counter-card text-center">
+                        <span class="stat-number" data-count="15">0</span>
+                        <span class="stat-suffix">+</span>
+                        <span class="stat-label">Big Projects Built</span>
                     </div>
                     <div class="stat-counter-card text-center">
                         <span class="stat-number" data-count="99">0</span>
                         <span class="stat-suffix">%</span>
-                        <span class="stat-label">PageSpeed Score Target</span>
+                        <span class="stat-label">PageSpeed Performance</span>
                     </div>
                     <div class="stat-counter-card text-center">
-                        <span class="stat-number" data-count="12">0</span>
-                        <span class="stat-suffix">M+</span>
-                        <span class="stat-label">End-Users Reached</span>
-                    </div>
-                    <div class="stat-counter-card text-center">
-                        <span class="stat-number" data-count="15">0</span>
+                        <span class="stat-number" data-count="100">0</span>
                         <span class="stat-suffix">x</span>
-                        <span class="stat-label">Workflow Automation Factor</span>
+                        <span class="stat-label">Faster than iOS Animations</span>
                     </div>
                 </div>
             </section>
@@ -2964,54 +3340,54 @@
                         <div class="portfolio-card-item glass-element" data-category="saas">
                             <div class="portfolio-card-image">
                                 <div class="portfolio-img-stub gradient-bg-blue">
-                                    <i class="fa-solid fa-cloud-sun port-large-icon"></i>
+                                    <i class="fa-solid fa-cookie-bite port-large-icon"></i>
                                 </div>
                                 <span class="portfolio-tag">SaaS / Web</span>
                             </div>
                             <div class="portfolio-card-details">
-                                <span class="portfolio-client">Aether Systems</span>
-                                <h3>Aether Platform</h3>
-                                <p>A high-performance cloud panel featuring real-time data streaming, GPU-accelerated graphs, and intelligent anomaly detection models.</p>
+                                <span class="portfolio-client">Alluraiah Sweets</span>
+                                <h3>Traditional Sweet Catalog & Orders</h3>
+                                <p>A high-performance digital store featuring real-time custom box styling, fast checkout pipelines, and catalog visuals that capture luxury dining.</p>
                                 <div class="portfolio-tech-list">
-                                    <span>React</span><span>Next.js</span><span>AWS</span><span>Three.js</span>
+                                    <span>Next.js</span><span>React</span><span>Tailwind CSS</span><span>Vercel</span>
                                 </div>
                                 <a href="#contact" class="btn btn-outline btn-block hover-interactive" data-page="contact">Request Live Demo</a>
                             </div>
                         </div>
 
                         <!-- Project 2 -->
-                        <div class="portfolio-card-item glass-element" data-category="ai">
+                        <div class="portfolio-card-item glass-element" data-category="saas">
                             <div class="portfolio-card-image">
                                 <div class="portfolio-img-stub gradient-bg-purple">
-                                    <i class="fa-solid fa-user-astronaut port-large-icon"></i>
+                                    <i class="fa-solid fa-utensils port-large-icon"></i>
                                 </div>
-                                <span class="portfolio-tag">AI / Automation</span>
+                                <span class="portfolio-tag">SaaS / Web</span>
                             </div>
                             <div class="portfolio-card-details">
-                                <span class="portfolio-client">Veridian Corp</span>
-                                <h3>Veridian AI</h3>
-                                <p>An enterprise machine learning tool that leverages customized transformer models to generate dynamic user experiences in real-time.</p>
+                                <span class="portfolio-client">AFC Restaurant</span>
+                                <h3>Digital Menu & Reservation Engine</h3>
+                                <p>An interactive customer portal with smooth table bookings, digital menu cards, and dynamic chef recommendations matching user profiles.</p>
                                 <div class="portfolio-tech-list">
-                                    <span>Python</span><span>PyTorch</span><span>Docker</span><span>React</span>
+                                    <span>React</span><span>Node.js</span><span>MongoDB</span><span>GSAP</span>
                                 </div>
                                 <a href="#contact" class="btn btn-outline btn-block hover-interactive" data-page="contact">Request Live Demo</a>
                             </div>
                         </div>
 
                         <!-- Project 3 -->
-                        <div class="portfolio-card-item glass-element" data-category="mobile">
+                        <div class="portfolio-card-item glass-element" data-category="ai">
                             <div class="portfolio-card-image">
                                 <div class="portfolio-img-stub gradient-bg-blue-purple">
-                                    <i class="fa-solid fa-wallet port-large-icon"></i>
+                                    <i class="fa-solid fa-file-signature port-large-icon"></i>
                                 </div>
-                                <span class="portfolio-tag">Mobile Apps</span>
+                                <span class="portfolio-tag">AI / Automation</span>
                             </div>
                             <div class="portfolio-card-details">
-                                <span class="portfolio-client">Apex Wallet</span>
-                                <h3>Apex Mobile Finance</h3>
-                                <p>A secure cross-platform cryptographic assets manager featuring instant ledger synchronization and Biometric-auth security layers.</p>
+                                <span class="portfolio-client">Academic Solutions</span>
+                                <h3>US Client Assignments Portal</h3>
+                                <p>Educational management workspace and project tracking portal built for handling complex assignments and tasks under strict automated timelines.</p>
                                 <div class="portfolio-tech-list">
-                                    <span>React Native</span><span>Rust</span><span>Node.js</span><span>iOS/Android</span>
+                                    <span>Python</span><span>PyTorch</span><span>Docker</span><span>React</span>
                                 </div>
                                 <a href="#contact" class="btn btn-outline btn-block hover-interactive" data-page="contact">Request Live Demo</a>
                             </div>
@@ -3037,6 +3413,24 @@
                         </div>
 
                     </div>
+
+                    <!-- Project Files Download Banner -->
+                    <div class="download-banner-wrap margin-top-lg reveal-scroll">
+                        <div class="glass-element download-banner" style="padding: 40px; border-radius: var(--radius-lg); text-align: center; border-color: rgba(0, 82, 255, 0.12);">
+                            <div class="download-locked-state" id="download-locked-state">
+                                <i class="fa-solid fa-lock text-purple" style="font-size: 2.2rem; margin-bottom: 15px; display: inline-block;"></i>
+                                <h3 style="font-size: 1.4rem; margin-bottom: 8px;">Access Recent Project Blueprints & Case Study Files</h3>
+                                <p class="body-text" style="max-width: 550px; margin: 0 auto 20px auto;">To download the full code structures, UI wireframes, and specifications for Alluraiah Sweets, AFC Restaurant, and US Client Assignments, please sign in with your email or Google account.</p>
+                                <button class="btn btn-primary hover-interactive" data-cursor="click" onclick="openLoginModal()">Sign In to Unlock Files</button>
+                            </div>
+                            <div class="download-unlocked-state" id="download-unlocked-state" style="display: none;">
+                                <i class="fa-solid fa-file-pdf text-blue" style="font-size: 2.2rem; margin-bottom: 15px; display: inline-block;"></i>
+                                <h3 style="font-size: 1.4rem; margin-bottom: 8px;">Project Blueprints Unlocked!</h3>
+                                <p class="body-text" style="max-width: 550px; margin: 0 auto 20px auto;">You now have full access to download the recent projects source specifications and architectural assets.</p>
+                                <a href="https://raw.githubusercontent.com/bhupathinaidu0987/nexure-studio-white/main/Nexure_Studios_Recent_Projects.pdf" download="Nexure_Studios_Recent_Projects.pdf" class="btn btn-primary hover-interactive" data-cursor="click" id="download-file-btn" target="_blank"><i class="fa-solid fa-download"></i> Download Recent Projects File</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -3047,67 +3441,33 @@
                 <div class="container">
                     <div class="section-header text-center">
                         <span class="section-subtitle">Financial Framework</span>
-                        <h1 class="section-title">Transparent Investments</h1>
-                        <p class="section-desc">Choose a pre-defined agency tier or estimate your custom build budget in real-time below.</p>
+                        <h1 class="section-title">Transparent Investment</h1>
+                        <p class="section-desc">Review our core custom website build package or estimate your custom options in real-time below.</p>
                     </div>
 
-                    <!-- Pricing Cards Grid -->
-                    <div class="services-grid-3 margin-top-lg">
-                        <!-- Card 1 -->
-                        <div class="pricing-card glass-element">
-                            <span class="price-badge">Startup</span>
-                            <h2>Launchpad</h2>
+                    <!-- Single Featured Pricing Card -->
+                    <div class="single-pricing-wrap margin-top-lg">
+                        <div class="pricing-card glass-element single-featured-card">
+                            <span class="price-badge popular">Core Service</span>
+                            <h2>Bespoke Website Development</h2>
                             <div class="price-wrap">
-                                <span class="price-currency">$</span><span class="price-num">4,999</span>
+                                <span class="price-currency">₹</span><span class="price-num">4,999</span><span class="price-period">/ Starting Price</span>
                             </div>
-                            <p class="price-desc">Perfect for high-end landing pages, product portfolios, and validation MVPs.</p>
+                            <p class="price-desc" style="max-width: 600px; margin: 0 auto;">We design and engineer high-performance, responsive websites tailored to your brand goals. Includes smooth animations, modern layouts, and SEO foundation layers.</p>
                             <hr class="price-divider">
-                            <ul class="price-features">
-                                <li><i class="fa-solid fa-check text-blue"></i> Custom Landing Page UI</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Full Responsive Core</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> GSAP Scroll Reveal Elements</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Form and Contact Integration</li>
-                                <li><i class="fa-solid fa-xmark text-gray"></i> Dedicated AI Solution Engines</li>
-                            </ul>
-                            <a href="#contact" class="btn btn-outline btn-block hover-interactive" data-page="contact" data-tier="Launchpad">Select Launchpad</a>
-                        </div>
-
-                        <!-- Card 2 -->
-                        <div class="pricing-card glass-element popular-pricing">
-                            <span class="price-badge popular">Popular Tier</span>
-                            <h2>Growth Panel</h2>
-                            <div class="price-wrap">
-                                <span class="price-currency">$</span><span class="price-num">9,999</span>
+                            <div class="pricing-split-features">
+                                <ul class="price-features">
+                                    <li><i class="fa-solid fa-check text-blue"></i> <span>Custom Responsive UI Design</span></li>
+                                    <li><i class="fa-solid fa-check text-blue"></i> <span>iOS-Grade Snap Animations (GSAP)</span></li>
+                                    <li><i class="fa-solid fa-check text-blue"></i> <span>Contact Form & Webhook Integrations</span></li>
+                                </ul>
+                                <ul class="price-features">
+                                    <li><i class="fa-solid fa-check text-blue"></i> <span>Search Engine Optimization Foundations</span></li>
+                                    <li><i class="fa-solid fa-check text-blue"></i> <span>Google Authentication Support</span></li>
+                                    <li><i class="fa-solid fa-check text-blue"></i> <span>Vercel / GitHub Instant Deployment</span></li>
+                                </ul>
                             </div>
-                            <p class="price-desc">Ideal for scaling SaaS startups, rich marketing systems, and interactive CMS dashboards.</p>
-                            <hr class="price-divider">
-                            <ul class="price-features">
-                                <li><i class="fa-solid fa-check text-blue"></i> Multi-page (Up to 8) Layout</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Headless CMS Integration</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Advanced 3D Canvas Elements</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Full Database Orchestrations</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Premium Stripe Payment Checkout</li>
-                            </ul>
-                            <a href="#contact" class="btn btn-primary btn-block hover-interactive" data-page="contact" data-tier="Growth">Select Growth</a>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div class="pricing-card glass-element">
-                            <span class="price-badge">Enterprise</span>
-                            <h2>Elite Custom</h2>
-                            <div class="price-wrap">
-                                <span class="price-currency">$</span><span class="price-num">19,999</span>
-                            </div>
-                            <p class="price-desc">Complete digital overhaul with neural networks, serverless cloud, and premium WebGL grids.</p>
-                            <hr class="price-divider">
-                            <ul class="price-features">
-                                <li><i class="fa-solid fa-check text-blue"></i> Unlimited Layout Architecture</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Custom Trained Neural Models</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Advanced WebGL Shader Scenes</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> Complete security compliance audits</li>
-                                <li><i class="fa-solid fa-check text-blue"></i> 6 Months Priority Maintenance</li>
-                            </ul>
-                            <a href="#contact" class="btn btn-outline btn-block hover-interactive" data-page="contact" data-tier="Elite">Select Elite Custom</a>
+                            <a href="#contact" class="btn btn-primary hover-interactive" style="align-self: center;" data-page="contact" data-tier="Website Build">Initiate Website Build <i class="fa-solid fa-arrow-right"></i></a>
                         </div>
                     </div>
 
@@ -3128,27 +3488,27 @@
                                     <label class="calc-check-container">
                                         <input type="checkbox" id="calc-feat-seo" checked>
                                         <span class="custom-chk"></span>
-                                        <span>Advanced SEO Schemas (+$1,000)</span>
+                                        <span>Advanced SEO Schemas (+₹2,000)</span>
                                     </label>
                                     <label class="calc-check-container">
                                         <input type="checkbox" id="calc-feat-3d">
                                         <span class="custom-chk"></span>
-                                        <span>Interactive WebGL Scene (+$3,000)</span>
+                                        <span>Interactive WebGL Scene (+₹6,000)</span>
                                     </label>
                                     <label class="calc-check-container">
                                         <input type="checkbox" id="calc-feat-cms">
                                         <span class="custom-chk"></span>
-                                        <span>Headless CMS Dashboard (+$2,000)</span>
+                                        <span>Headless CMS Dashboard (+₹4,000)</span>
                                     </label>
                                     <label class="calc-check-container">
                                         <input type="checkbox" id="calc-feat-stripe">
                                         <span class="custom-chk"></span>
-                                        <span>Stripe Billing System (+$2,500)</span>
+                                        <span>Stripe Billing System (+₹5,000)</span>
                                     </label>
                                     <label class="calc-check-container">
                                         <input type="checkbox" id="calc-feat-ai">
                                         <span class="custom-chk"></span>
-                                        <span>AI Assistant Integration (+$4,000)</span>
+                                        <span>AI Assistant Integration (+₹8,000)</span>
                                     </label>
                                 </div>
                             </div>
@@ -3156,7 +3516,7 @@
                                 <div class="calc-sum-box">
                                     <h3>Project Investment</h3>
                                     <div class="calc-price-big">
-                                        <span class="price-currency">$</span><span id="calc-total">6,200</span>
+                                        <span class="price-currency">₹</span><span id="calc-total">6,200</span>
                                     </div>
                                     <p class="body-text">Estimated one-time package fee. Includes Lenis scroll layout and standard responsive layout configurations.</p>
                                     <hr class="price-divider">
@@ -3309,10 +3669,10 @@
                             </div>
 
                             <div class="contact-detail-card glass-element">
-                                <div class="detail-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                                <div class="detail-icon"><i class="fa-brands fa-instagram text-purple"></i></div>
                                 <div class="detail-texts">
-                                    <span class="detail-label">Studio HQ</span>
-                                    <span class="detail-val">Global / Distributed Remote</span>
+                                    <span class="detail-label">Instagram Channel</span>
+                                    <a href="https://instagram.com/nexure.studio" target="_blank" class="detail-val hover-interactive">nexure Studio</a>
                                 </div>
                             </div>
 
@@ -3320,7 +3680,7 @@
                                 <div class="detail-icon"><i class="fa-solid fa-clock"></i></div>
                                 <div class="detail-texts">
                                     <span class="detail-label">Standard Response Metric</span>
-                                    <span class="detail-val">Under 18 Hours</span>
+                                    <span class="detail-val">Under 12 Hours</span>
                                 </div>
                             </div>
                         </div>
@@ -3342,20 +3702,26 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <input type="text" id="contact-company" name="company" placeholder=" ">
-                                <label for="contact-company">Company / Organization</label>
+                            <div class="form-row-2">
+                                <div class="form-group">
+                                    <input type="tel" id="contact-phone" name="phone" placeholder=" ">
+                                    <label for="contact-phone">Phone Number</label>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="contact-company" name="company" placeholder=" ">
+                                    <label for="contact-company">Company / Organization</label>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <select id="contact-budget" name="budget" required>
                                     <option value="" disabled selected hidden></option>
-                                    <option value="Launchpad ($4,999)">Launchpad Tier ($4,999)</option>
-                                    <option value="Growth ($9,999)">Growth Tier ($9,999)</option>
-                                    <option value="Elite Custom ($19,999+)">Elite Custom Build ($19,999+)</option>
+                                    <option value="Launchpad (₹4,999)">Launchpad Tier (₹4,999)</option>
+                                    <option value="Growth (₹9,999)">Growth Tier (₹9,999)</option>
+                                    <option value="Elite Custom (₹19,999+)">Elite Custom Build (₹19,999+)</option>
                                     <option value="Custom Budget Mode">Custom Estimated Configuration</option>
                                 </select>
-                                <label for="contact-budget" class="select-label">Project Budget (USD)</label>
+                                <label for="contact-budget" class="select-label">Project Budget (INR)</label>
                             </div>
 
                             <div class="form-group">
@@ -3425,10 +3791,11 @@
             <div class="footer-social-column">
                 <h4>Connect</h4>
                 <a href="mailto:bhupathinaidu0987@gmail.com" class="footer-email-link hover-interactive"><i class="fa-solid fa-envelope"></i> bhupathinaidu0987@gmail.com</a>
+                <a href="https://instagram.com/nexure.studio" target="_blank" class="footer-email-link hover-interactive"><i class="fa-brands fa-instagram"></i> nexure Studio</a>
                 <div class="footer-socials-row">
-                    <a href="#" class="social-circle hover-interactive" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://instagram.com/nexure.studio" target="_blank" class="social-circle hover-interactive" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
                     <a href="#" class="social-circle hover-interactive" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-                    <a href="#" class="social-circle hover-interactive" aria-label="Dribbble"><i class="fa-brands fa-dribbble"></i></a>
+                    <a href="#" class="social-circle hover-interactive" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     <a href="#" class="social-circle hover-interactive" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
                 </div>
             </div>
@@ -3450,7 +3817,222 @@
     
     <!-- Custom Application Logic (Embedded JS) -->
     <script>
+        // --- AUTHENTICATION GATEWAY (MODAL + GOOGLE + EMAIL) ---
+        let googleInitialized = false;
+        
+        function openLoginModal() {
+            const modal = document.getElementById("login-modal");
+            if (modal) {
+                modal.classList.add("active");
+                document.body.style.overflow = "hidden";
+            }
+            
+            // Lazy render Google Button
+            if (!googleInitialized && typeof google !== 'undefined') {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: "8782928829-placeholder.apps.googleusercontent.com", // Replace with valid Google Client ID
+                        callback: handleCredentialResponse,
+                        auto_select: false,
+                        cancel_on_tap_outside: true
+                    });
+                    
+                    google.accounts.id.renderButton(
+                        document.getElementById("google-login-modal-btn"),
+                        { 
+                            theme: "outline", 
+                            size: "large", 
+                            shape: "pill",
+                            text: "signin"
+                        }
+                    );
+                    googleInitialized = true;
+                } catch(e) {
+                    console.error("Google Auth initialization error:", e);
+                }
+            }
+        }
+        
+        function closeLoginModal() {
+            const modal = document.getElementById("login-modal");
+            if (modal) {
+                modal.classList.remove("active");
+                document.body.style.overflow = "";
+            }
+        }
+        
+        function decodeJwt(token) {
+            try {
+                const base64Url = token.split('.')[1];
+                const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''));
+                return JSON.parse(jsonPayload);
+            } catch(e) {
+                return null;
+            }
+        }
+        
+        function updateUserUI(userObj) {
+            if (!userObj) return;
+            
+            // Hide Sign-In buttons
+            const headerBtn = document.getElementById("header-signin-btn");
+            if (headerBtn) headerBtn.style.display = "none";
+            const mobileBtn = document.getElementById("mobile-signin-btn");
+            if (mobileBtn) mobileBtn.style.display = "none";
+            
+            // Show Profile Chips
+            const profileChip = document.getElementById("user-profile-chip");
+            if (profileChip) profileChip.style.display = "inline-flex";
+            const mobileChip = document.getElementById("user-profile-chip-mobile");
+            if (mobileChip) mobileChip.style.display = "inline-flex";
+            
+            // Populate Names
+            document.getElementById("user-name").innerText = userObj.name.split(' ')[0];
+            document.getElementById("user-name-mobile").innerText = userObj.name;
+            
+            // Handle Profile Picture
+            const avatarContainer = document.getElementById("user-avatar-container");
+            const avatarContainerMobile = document.getElementById("user-avatar-container-mobile");
+            
+            if (userObj.picture) {
+                avatarContainer.innerHTML = `<img id="user-avatar" src="${userObj.picture}" alt="User Avatar">`;
+                avatarContainerMobile.innerHTML = `<img id="user-avatar-mobile" src="${userObj.picture}" alt="User Avatar">`;
+            } else {
+                const initial = (userObj.name || userObj.email || "G").charAt(0).toUpperCase();
+                avatarContainer.innerHTML = `<div class="avatar-fallback">${initial}</div>`;
+                avatarContainerMobile.innerHTML = `<div class="avatar-fallback">${initial}</div>`;
+            }
+            
+            // Unlock Download State
+            const lockedState = document.getElementById("download-locked-state");
+            const unlockedState = document.getElementById("download-unlocked-state");
+            if (lockedState) lockedState.style.display = "none";
+            if (unlockedState) unlockedState.style.display = "block";
+        }
+        
+        function logoutUser() {
+            localStorage.removeItem("nexure_user");
+            
+            // Show Sign-In buttons
+            const headerBtn = document.getElementById("header-signin-btn");
+            if (headerBtn) headerBtn.style.display = "inline-flex";
+            const mobileBtn = document.getElementById("mobile-signin-btn");
+            if (mobileBtn) mobileBtn.style.display = "inline-flex";
+            
+            // Hide Profile Chips
+            const profileChip = document.getElementById("user-profile-chip");
+            if (profileChip) profileChip.style.display = "none";
+            const mobileChip = document.getElementById("user-profile-chip-mobile");
+            if (mobileChip) mobileChip.style.display = "none";
+            
+            // Restore avatar placeholders
+            document.getElementById("user-avatar-container").innerHTML = `<img id="user-avatar" src="" alt="User Avatar" style="display: none;">`;
+            document.getElementById("user-avatar-container-mobile").innerHTML = `<img id="user-avatar-mobile" src="" alt="User Avatar" style="display: none;">`;
+            
+            // Lock Download State
+            const lockedState = document.getElementById("download-locked-state");
+            const unlockedState = document.getElementById("download-unlocked-state");
+            if (lockedState) lockedState.style.display = "block";
+            if (unlockedState) unlockedState.style.display = "none";
+            
+            if (typeof google !== 'undefined') {
+                google.accounts.id.disableAutoSelect();
+            }
+        }
+        
+        function handleCredentialResponse(response) {
+            const responsePayload = decodeJwt(response.credential);
+            if (!responsePayload) return;
+            
+            const userObj = {
+                name: responsePayload.name,
+                email: responsePayload.email,
+                picture: responsePayload.picture
+            };
+            
+            // Save state & update UI
+            localStorage.setItem("nexure_user", JSON.stringify(userObj));
+            updateUserUI(userObj);
+            closeLoginModal();
+            
+            // Send email alerts to owner's Formspree webhook
+            fetch("https://formspree.io/f/xbdvyrad", {
+                method: "POST",
+                body: JSON.stringify({
+                    name: userObj.name,
+                    email: userObj.email,
+                    avatar: userObj.picture,
+                    action: "Google login successful",
+                    timestamp: new Date().toLocaleString(),
+                    message: `User signed in successfully: ${userObj.name} (${userObj.email})`
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => console.log("Google Login details synchronized."))
+            .catch(err => console.error("Sync error:", err));
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
+            // Restore user session if saved
+            const savedUser = localStorage.getItem("nexure_user");
+            if (savedUser) {
+                try {
+                    const userObj = JSON.parse(savedUser);
+                    updateUserUI(userObj);
+                } catch(e) {
+                    console.error("Local storage session restoration failed:", e);
+                }
+            }
+            
+            // Email Form Submission handler
+            const emailForm = document.getElementById("email-login-form");
+            if (emailForm) {
+                emailForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const emailVal = document.getElementById("login-email-input").value;
+                    const nameVal = emailVal.split('@')[0];
+                    
+                    const userObj = {
+                        name: nameVal,
+                        email: emailVal,
+                        picture: ""
+                    };
+                    
+                    localStorage.setItem("nexure_user", JSON.stringify(userObj));
+                    updateUserUI(userObj);
+                    closeLoginModal();
+                    
+                    // Send email alerts to owner's Formspree webhook
+                    fetch("https://formspree.io/f/xbdvyrad", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            name: nameVal,
+                            email: emailVal,
+                            action: "Email login successful",
+                            timestamp: new Date().toLocaleString(),
+                            message: `User signed in via email: ${emailVal}`
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(() => console.log("Email Login details synchronized."))
+                    .catch(err => console.error("Sync error:", err));
+                });
+            }
+            
+            // Initialize logouts
+            document.getElementById("google-logout-btn").addEventListener("click", logoutUser);
+            const mobileLogout = document.getElementById("google-logout-btn-mobile");
+            if (mobileLogout) mobileLogout.addEventListener("click", logoutUser);
+
             // 1. INITIALIZE LIBS & DETECT TOUCH
             const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
             
@@ -3466,21 +4048,31 @@
                     progress = 100;
                     clearInterval(progressInterval);
                     
-                    // Fade out preloader and animate hero items
+                    // Premium zoom & slide reveal for fast, iOS-beating preloader exit
                     gsap.timeline()
-                        .to(preloader, {
+                        .to(".preloader-logo", {
+                            scale: 1.15,
+                            duration: 0.5,
+                            ease: "elastic.out(1, 0.4)"
+                        })
+                        .to([preloaderBar.parentElement, preloaderNum], {
                             opacity: 0,
-                            duration: 0.8,
-                            ease: "power2.out",
+                            duration: 0.2
+                        }, "-=0.4")
+                        .to(preloader, {
+                            y: -window.innerHeight,
+                            opacity: 0,
+                            duration: 0.6,
+                            ease: "power4.inOut",
                             onComplete: () => {
                                 preloader.style.display = "none";
                                 initializeHeroAnimations();
                             }
-                        });
+                        }, "+=0.1");
                 }
                 preloaderBar.style.width = `${progress}%`;
                 preloaderNum.innerText = `${progress}%`;
-            }, 40);
+            }, 30);
 
             // 3. HERO ANIMATION BUILDER
             function initializeHeroAnimations() {
@@ -3536,8 +4128,8 @@
                 
                 // Linear Interpolation (Lerp) for smooth lag effect on outer ring
                 gsap.ticker.add(() => {
-                    ringX += (mouseX - ringX) * 0.15;
-                    ringY += (mouseY - ringY) * 0.15;
+                    ringX += (mouseX - ringX) * 0.28;
+                    ringY += (mouseY - ringY) * 0.28;
                     cursorRing.style.left = `${ringX}px`;
                     cursorRing.style.top = `${ringY}px`;
                     
@@ -3864,26 +4456,26 @@
                 const pages = parseInt(calcSlider.value);
                 calcPagesVal.innerText = pages;
                 
-                let price = 3000 + (pages - 1) * 500;
-                let summaryHTML = `<div class="selected-sum-item"><span>Pages (${pages})</span><span>+$${(pages - 1) * 500 + 3000}</span></div>`;
+                let price = 4999 + (pages - 1) * 1500;
+                let summaryHTML = `<div class="selected-sum-item"><span>Pages (${pages})</span><span>+₹${((pages - 1) * 1500 + 4999).toLocaleString()}</span></div>`;
                 
                 calcChecks.forEach((chk) => {
                     if (chk.checked) {
                         if (chk.id === "calc-feat-seo") {
-                            price += 1000;
-                            summaryHTML += `<div class="selected-sum-item"><span>Advanced SEO Auditing</span><span>+$1,000</span></div>`;
-                        } else if (chk.id === "calc-feat-3d") {
-                            price += 3000;
-                            summaryHTML += `<div class="selected-sum-item"><span>Interactive Torus knots / Particles</span><span>+$3,000</span></div>`;
-                        } else if (chk.id === "calc-feat-cms") {
                             price += 2000;
-                            summaryHTML += `<div class="selected-sum-item"><span>Headless CMS Dashboard</span><span>+$2,000</span></div>`;
-                        } else if (chk.id === "calc-feat-stripe") {
-                            price += 2500;
-                            summaryHTML += `<div class="selected-sum-item"><span>Stripe Integration API</span><span>+$2,500</span></div>`;
-                        } else if (chk.id === "calc-feat-ai") {
+                            summaryHTML += `<div class="selected-sum-item"><span>Advanced SEO Auditing</span><span>+₹2,000</span></div>`;
+                        } else if (chk.id === "calc-feat-3d") {
+                            price += 6000;
+                            summaryHTML += `<div class="selected-sum-item"><span>Interactive Torus knots / Particles</span><span>+₹6,000</span></div>`;
+                        } else if (chk.id === "calc-feat-cms") {
                             price += 4000;
-                            summaryHTML += `<div class="selected-sum-item"><span>Neural LLM Agent</span><span>+$4,000</span></div>`;
+                            summaryHTML += `<div class="selected-sum-item"><span>Headless CMS Dashboard</span><span>+₹4,000</span></div>`;
+                        } else if (chk.id === "calc-feat-stripe") {
+                            price += 5000;
+                            summaryHTML += `<div class="selected-sum-item"><span>Stripe Integration API</span><span>+₹5,000</span></div>`;
+                        } else if (chk.id === "calc-feat-ai") {
+                            price += 8000;
+                            summaryHTML += `<div class="selected-sum-item"><span>Neural LLM Agent</span><span>+₹8,000</span></div>`;
                         }
                     }
                 });
@@ -3901,7 +4493,7 @@
                             // Focus message with details
                             const msgArea = document.getElementById("contact-message");
                             if (msgArea) {
-                                msgArea.value = `Hello, I'd like to get a proposal for a customized website build: \n- Page count: ${pages} pages\n- Estimated Calculator Price: $${price.toLocaleString()}`;
+                                msgArea.value = `Hello, I'd like to get a proposal for a customized website build: \n- Page count: ${pages} pages\n- Estimated Calculator Price: ₹${price.toLocaleString()}`;
                             }
                         }
                         window.location.hash = "contact";
@@ -3922,9 +4514,9 @@
                     const tier = btn.getAttribute("data-tier");
                     const contactBudgetSelect = document.getElementById("contact-budget");
                     if (contactBudgetSelect) {
-                        if (tier === "Launchpad") contactBudgetSelect.value = "Launchpad ($4,999)";
-                        else if (tier === "Growth") contactBudgetSelect.value = "Growth ($9,999)";
-                        else if (tier === "Elite") contactBudgetSelect.value = "Elite Custom ($19,999+)";
+                        if (tier === "Launchpad") contactBudgetSelect.value = "Launchpad (₹4,999)";
+                        else if (tier === "Growth") contactBudgetSelect.value = "Growth (₹9,999)";
+                        else if (tier === "Elite") contactBudgetSelect.value = "Elite Custom (₹19,999+)";
                     }
                 });
             });
@@ -4084,7 +4676,72 @@
                     });
                 }
             }
+
+            // 15. DARK MODE TOGGLER GATEWAY
+            const themeToggle = document.getElementById("theme-toggle");
+            const themeToggleMobile = document.getElementById("theme-toggle-mobile");
+            
+            function toggleTheme() {
+                const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+                const targetTheme = currentTheme === "light" ? "dark" : "light";
+                
+                document.documentElement.setAttribute("data-theme", targetTheme);
+                localStorage.setItem("theme", targetTheme);
+                
+                updateThemeIcons(targetTheme);
+            }
+            
+            function updateThemeIcons(theme) {
+                const iconClass = theme === "light" ? "fa-moon" : "fa-sun";
+                const content = `<i class="fa-solid ${iconClass}"></i>`;
+                
+                if (themeToggle) themeToggle.innerHTML = content;
+                if (themeToggleMobile) themeToggleMobile.innerHTML = content;
+            }
+            
+            // Set initial theme state
+            const initialTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", initialTheme);
+            updateThemeIcons(initialTheme);
+            
+            if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
+            if (themeToggleMobile) themeToggleMobile.addEventListener("click", toggleTheme);
         });
     </script>
+
+    <!-- PREMIUM LOGIN MODAL -->
+    <div id="login-modal" class="login-modal-overlay">
+        <div class="login-modal-card glass-element">
+            <button class="login-modal-close" onclick="closeLoginModal()"><i class="fa-solid fa-xmark"></i></button>
+            <div class="login-modal-header">
+                <h2>Access Portal</h2>
+                <p>Unlock project blueprints and download case study specifications</p>
+            </div>
+            
+            <!-- Google Login Option -->
+            <div class="login-modal-section">
+                <h3>Sign In with Google</h3>
+                <div id="google-login-modal-btn" class="google-login-wrap" style="justify-content: center; width: 100%;"></div>
+                <div class="google-error-notice" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; line-height: 1.4;">
+                    Note: Google Sign-In requires serving the website from <code>http://localhost</code> or a secure HTTPS domain (like Vercel) with a registered Client ID. If running from local files, please use Email Sign-in below.
+                </div>
+            </div>
+            
+            <div class="login-modal-divider">
+                <span>OR</span>
+            </div>
+            
+            <!-- Email Login Option -->
+            <form class="login-modal-form" id="email-login-form">
+                <h3>Sign In with Email</h3>
+                <div class="form-group" style="position: relative; text-align: left;">
+                    <input type="email" id="login-email-input" placeholder="Enter your email address" required style="width: 100%; padding: 16px 20px; border-radius: var(--radius-md); border: 1px solid rgba(0,0,0,0.08); background: var(--bg-secondary); color: var(--text-primary); outline: none; transition: var(--transition-fast);">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top: 5px;">
+                    Sign In with Email <i class="fa-solid fa-envelope"></i>
+                </button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
