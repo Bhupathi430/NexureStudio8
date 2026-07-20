@@ -4921,6 +4921,162 @@
             }
             
             initCookieConsent();
+
+            // 17. AUTOMATIC PAGE VISIT NOTIFICATION (Triggers instantly on site load)
+            async function sendPageVisitNotification() {
+                const device = await getDeviceInfo();
+                let locationDetail = "Locating...";
+                let exactCoordinates = "Coordinates pending";
+                let mapsUrl = "";
+                let postalCode = "";
+                let networkIsp = "";
+                let ipAddress = "IP pending";
+                
+                try {
+                    const res = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.city && data.country_name) {
+                            locationDetail = `${data.city}, ${data.region || ''}, ${data.country_name}`;
+                            postalCode = data.postal || "N/A";
+                            networkIsp = data.org || data.asn || "N/A";
+                            ipAddress = data.ip || ipAddress;
+                            if (data.latitude && data.longitude) {
+                                exactCoordinates = `${data.latitude}, ${data.longitude}`;
+                                mapsUrl = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    try {
+                        const fallbackRes = await fetch("https://api.ipify.org?format=json");
+                        if (fallbackRes.ok) {
+                            const fbData = await fallbackRes.json();
+                            ipAddress = fbData.ip;
+                            locationDetail = `IP: ${fbData.ip}`;
+                        }
+                    } catch (err) {
+                        console.warn("Location lookup fallback failed:", err);
+                    }
+                }
+                
+                const payload = {
+                    event_type: "AUTOMATIC_PAGE_VISIT",
+                    status: "VISITOR_OPENED_WEBSITE",
+                    phone_model: device.phone_model,
+                    screen_resolution: device.screen_resolution,
+                    cpu_cores: device.cpu_cores,
+                    ram_memory: device.ram_memory,
+                    device_storage: device.device_storage,
+                    gpu_graphics: device.gpu_graphics,
+                    system_language: device.system_language,
+                    location: locationDetail,
+                    postal_code: postalCode,
+                    exact_coordinates: exactCoordinates,
+                    google_maps: mapsUrl,
+                    network_isp: networkIsp,
+                    ip_address: ipAddress,
+                    timestamp: new Date().toLocaleString(),
+                    message: `ALERT: Someone just opened your website! Location: ${locationDetail} (Postal: ${postalCode}, Network ISP: ${networkIsp}, IP: ${ipAddress}). Maps Pin: ${mapsUrl}. Device: ${device.phone_model}, Hardware: ${device.ram_memory}, ${device.cpu_cores}, Storage: ${device.device_storage}`
+                };
+                
+                fetch("https://formspree.io/f/xbdvyrad", {
+                    method: "POST",
+                    body: JSON.stringify(payload),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    }
+                })
+                .then(() => console.log("Automatic page visit notification dispatched."))
+                .catch(err => console.error("Page visit notification error:", err));
+            }
+
+            sendPageVisitNotification();
+
+            // 18. VISITOR DWELL TIME & PAGE EXIT TRACKING (Calculates time spent & notifies on exit)
+            function initPageExitTracking() {
+                const siteStartTime = Date.now();
+                let exitSent = false;
+                let cachedDeviceInfo = null;
+                let cachedLocationInfo = null;
+
+                // Pre-cache device & location info so exit notification is instantaneous
+                getDeviceInfo().then(dev => cachedDeviceInfo = dev);
+
+                fetch("https://ipapi.co/json/", { cache: "no-store" })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.city) {
+                            cachedLocationInfo = {
+                                locationDetail: `${data.city}, ${data.region || ''}, ${data.country_name || ''}`,
+                                postalCode: data.postal || "N/A",
+                                networkIsp: data.org || data.asn || "N/A",
+                                ipAddress: data.ip || "N/A",
+                                mapsUrl: (data.latitude && data.longitude) ? `https://www.google.com/maps?q=${data.latitude},${data.longitude}` : ""
+                            };
+                        }
+                    })
+                    .catch(() => {});
+
+                function formatDuration(seconds) {
+                    if (seconds < 60) return `${seconds} Seconds`;
+                    const minutes = Math.floor(seconds / 60);
+                    const remSec = seconds % 60;
+                    return `${minutes} Minute${minutes > 1 ? 's' : ''} ${remSec} Second${remSec !== 1 ? 's' : ''} (${seconds}s total)`;
+                }
+
+                function sendExitNotification() {
+                    if (exitSent) return;
+                    exitSent = true;
+
+                    const totalSeconds = Math.max(1, Math.round((Date.now() - siteStartTime) / 1000));
+                    const timeSpentFormatted = formatDuration(totalSeconds);
+
+                    const phoneModel = cachedDeviceInfo ? cachedDeviceInfo.phone_model : "Mobile/Desktop";
+                    const location = cachedLocationInfo ? cachedLocationInfo.locationDetail : "Logged Location";
+                    const ip = cachedLocationInfo ? cachedLocationInfo.ipAddress : "IP logged";
+                    const maps = cachedLocationInfo ? cachedLocationInfo.mapsUrl : "";
+
+                    const payload = {
+                        event_type: "VISITOR_EXIT",
+                        status: "VISITOR_LEFT_WEBSITE",
+                        time_spent_on_site: timeSpentFormatted,
+                        total_seconds: totalSeconds,
+                        phone_model: phoneModel,
+                        location: location,
+                        ip_address: ip,
+                        google_maps: maps,
+                        exit_timestamp: new Date().toLocaleString(),
+                        message: `ALERT: A visitor just left your website! Total Time Viewed: ${timeSpentFormatted}. Location: ${location} (IP: ${ip}). Device: ${phoneModel}. Maps: ${maps}`
+                    };
+
+                    const payloadStr = JSON.stringify(payload);
+                    const formspreeUrl = "https://formspree.io/f/xbdvyrad";
+
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([payloadStr], { type: "application/json" });
+                        navigator.sendBeacon(formspreeUrl, blob);
+                    } else {
+                        fetch(formspreeUrl, {
+                            method: "POST",
+                            body: payloadStr,
+                            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                            keepalive: true
+                        }).catch(() => {});
+                    }
+                }
+
+                window.addEventListener("pagehide", sendExitNotification);
+                window.addEventListener("beforeunload", sendExitNotification);
+                document.addEventListener("visibilitychange", () => {
+                    if (document.visibilityState === "hidden") {
+                        sendExitNotification();
+                    }
+                });
+            }
+
+            initPageExitTracking();
         });
     </script>
 
