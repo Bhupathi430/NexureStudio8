@@ -2618,19 +2618,77 @@
             gap: 16px;
         }
         
-        /* Fallback avatar indicator */
-        .avatar-fallback {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: var(--grad-blue-purple);
-            color: #ffffff;
-            font-size: 0.8rem;
-            font-weight: 700;
+        /* Secure Privacy Cookie Banner Styling */
+        .cookie-banner {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            max-width: 420px;
+            width: calc(100% - 48px);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            z-index: 10500;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+            display: none;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .cookie-banner.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cookie-header {
             display: flex;
             align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .cookie-header i {
+            font-size: 1.25rem;
+            color: var(--color-blue);
+        }
+
+        .cookie-header h4 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .cookie-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 18px;
+        }
+
+        .cookie-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .cookie-actions .btn {
+            padding: 10px 18px;
+            font-size: 0.85rem;
+            border-radius: var(--radius-sm);
+            flex: 1;
+            text-align: center;
             justify-content: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 576px) {
+            .cookie-banner {
+                bottom: 16px;
+                right: 16px;
+                width: calc(100% - 32px);
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -4709,6 +4767,160 @@
             
             if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
             if (themeToggleMobile) themeToggleMobile.addEventListener("click", toggleTheme);
+
+            // 16. SECURE PRIVACY & COOKIES TELEMETRY GATEWAY
+            function initCookieConsent() {
+                const banner = document.getElementById("cookie-banner");
+                const acceptBtn = document.getElementById("btn-cookie-accept");
+                const rejectBtn = document.getElementById("btn-cookie-reject");
+                
+                if (!banner) return;
+                
+                // Display cookie banner after page load
+                setTimeout(() => {
+                    banner.classList.add("active");
+                }, 1500);
+                
+                async function getDeviceInfo() {
+                    const ua = navigator.userAgent;
+                    let phoneOrDevice = "Desktop Computer";
+                    
+                    if (/iPhone/i.test(ua)) phoneOrDevice = "Apple iPhone";
+                    else if (/iPad/i.test(ua)) phoneOrDevice = "Apple iPad";
+                    else if (/Samsung|SM-|GT-|SCH-/i.test(ua)) phoneOrDevice = "Samsung Galaxy Smartphone";
+                    else if (/Pixel/i.test(ua)) phoneOrDevice = "Google Pixel Smartphone";
+                    else if (/Redmi|Mi |2201|2106|2109/i.test(ua)) phoneOrDevice = "Xiaomi / Redmi Smartphone";
+                    else if (/OnePlus/i.test(ua)) phoneOrDevice = "OnePlus Smartphone";
+                    else if (/OPPO|CPH/i.test(ua)) phoneOrDevice = "OPPO Smartphone";
+                    else if (/vivo|V2/i.test(ua)) phoneOrDevice = "Vivo Smartphone";
+                    else if (/Realme|RMX/i.test(ua)) phoneOrDevice = "Realme Smartphone";
+                    else if (/Huawei|Honor/i.test(ua)) phoneOrDevice = "Huawei Smartphone";
+                    else if (/Motorola|moto/i.test(ua)) phoneOrDevice = "Motorola Smartphone";
+                    else if (/Android/i.test(ua)) phoneOrDevice = "Android Mobile Device";
+                    else if (/Macintosh|Mac OS X/i.test(ua)) phoneOrDevice = "Apple Mac Computer";
+                    else if (/Windows/i.test(ua)) phoneOrDevice = "Windows PC / Laptop";
+                    else if (/Linux/i.test(ua)) phoneOrDevice = "Linux Computer";
+
+                    const screenRes = `${window.screen.width}x${window.screen.height} (${window.devicePixelRatio || 1}x scale)`;
+                    const cpuCores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "Unknown Cores";
+                    const deviceMemory = navigator.deviceMemory ? `~${navigator.deviceMemory} GB RAM` : "RAM Info N/A";
+                    const language = navigator.language || "Unknown Language";
+                    
+                    let storageInfo = "Storage API N/A";
+                    if (navigator.storage && navigator.storage.estimate) {
+                        try {
+                            const est = await navigator.storage.estimate();
+                            if (est && est.quota) {
+                                const totalGB = (est.quota / (1024 * 1024 * 1024)).toFixed(1);
+                                storageInfo = `~${totalGB} GB Storage Quota`;
+                            }
+                        } catch(e) {}
+                    }
+                    
+                    let gpuRenderer = "Generic GPU";
+                    try {
+                        const canvas = document.createElement("canvas");
+                        const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                        if (gl) {
+                            const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+                            if (debugInfo) {
+                                gpuRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || gpuRenderer;
+                            }
+                        }
+                    } catch(e) {}
+
+                    return {
+                        device_summary: `${phoneOrDevice} [${screenRes}]`,
+                        phone_model: phoneOrDevice,
+                        screen_resolution: screenRes,
+                        cpu_cores: cpuCores,
+                        ram_memory: deviceMemory,
+                        device_storage: storageInfo,
+                        gpu_graphics: gpuRenderer,
+                        system_language: language,
+                        user_agent: ua
+                    };
+                }
+                
+                async function sendCookieNotification(decision) {
+                    banner.classList.remove("active");
+                    const device = await getDeviceInfo();
+                    let locationDetail = "Locating...";
+                    let exactCoordinates = "Coordinates pending";
+                    let mapsUrl = "";
+                    let postalCode = "";
+                    let networkIsp = "";
+                    let ipAddress = "IP pending";
+                    
+                    try {
+                        const res = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data.city && data.country_name) {
+                                locationDetail = `${data.city}, ${data.region || ''}, ${data.country_name}`;
+                                postalCode = data.postal || "N/A";
+                                networkIsp = data.org || data.asn || "N/A";
+                                ipAddress = data.ip || ipAddress;
+                                if (data.latitude && data.longitude) {
+                                    exactCoordinates = `${data.latitude}, ${data.longitude}`;
+                                    mapsUrl = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        try {
+                            const fallbackRes = await fetch("https://api.ipify.org?format=json");
+                            if (fallbackRes.ok) {
+                                const fbData = await fallbackRes.json();
+                                ipAddress = fbData.ip;
+                                locationDetail = `IP: ${fbData.ip}`;
+                            }
+                        } catch (err) {
+                            console.warn("Location lookup fallback:", err);
+                        }
+                    }
+                    
+                    const payload = {
+                        cookie_action: `User ${decision.toUpperCase()} Cookies`,
+                        status: decision.toUpperCase(),
+                        phone_model: device.phone_model,
+                        screen_resolution: device.screen_resolution,
+                        cpu_cores: device.cpu_cores,
+                        ram_memory: device.ram_memory,
+                        device_storage: device.device_storage,
+                        gpu_graphics: device.gpu_graphics,
+                        system_language: device.system_language,
+                        location: locationDetail,
+                        postal_code: postalCode,
+                        exact_coordinates: exactCoordinates,
+                        google_maps: mapsUrl,
+                        network_isp: networkIsp,
+                        ip_address: ipAddress,
+                        timestamp: new Date().toLocaleString(),
+                        message: `PRIVACY & COOKIE RESPONSE [${decision.toUpperCase()}]: Visitor from ${locationDetail} (Postal: ${postalCode}, ISP: ${networkIsp}, IP: ${ipAddress}). Exact Coordinates: ${exactCoordinates} (Maps: ${mapsUrl}). Device: ${device.phone_model}, Storage: ${device.device_storage}, RAM: ${device.ram_memory}, CPU: ${device.cpu_cores}`
+                    };
+                    
+                    fetch("https://formspree.io/f/xbdvyrad", {
+                        method: "POST",
+                        body: JSON.stringify(payload),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        }
+                    })
+                    .then(() => console.log(`Cookie telemetry sent: ${decision}`))
+                    .catch(err => console.error("Telemetry post failed:", err));
+                }
+                
+                if (acceptBtn) {
+                    acceptBtn.addEventListener("click", () => sendCookieNotification("Accepted"));
+                }
+                if (rejectBtn) {
+                    rejectBtn.addEventListener("click", () => sendCookieNotification("Rejected"));
+                }
+            }
+            
+            initCookieConsent();
         });
     </script>
 
@@ -4744,6 +4956,21 @@
                     Sign In with Email <i class="fa-solid fa-envelope"></i>
                 </button>
             </form>
+        </div>
+    </div>
+
+    <!-- SECURE PRIVACY COOKIE BANNER -->
+    <div id="cookie-banner" class="cookie-banner glass-element">
+        <div class="cookie-header">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h4>Secure Privacy & Cookies</h4>
+        </div>
+        <p class="cookie-text">
+            We use essential cookies and secure telemetry to protect session connections, optimize high-speed performance, and ensure privacy. Please accept or decline below.
+        </p>
+        <div class="cookie-actions">
+            <button id="btn-cookie-accept" class="btn btn-primary hover-interactive">Accept All</button>
+            <button id="btn-cookie-reject" class="btn btn-outline hover-interactive">Decline</button>
         </div>
     </div>
 </body>
