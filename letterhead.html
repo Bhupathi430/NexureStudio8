@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexure Studios | Official Executive Printable Letterhead Paper</title>
+  <meta name="description" content="Official executive printable letterhead paper design for Nexure Studios.">
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap');
+
+    :root {
+      --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      --font-signature: 'Dancing Script', 'Brush Script MT', cursive;
+      --brand-blue: #5061ff;
+      --brand-red: #ff4b3e;
+      --brand-silver: #cbd5e1;
+      --brand-green: #22c55e;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #e2e8f0;
+      color: var(--text-dark);
+      font-family: var(--font-main);
+      padding: 2.5rem 1rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Screen Action Bar */
+    .screen-actions-bar {
+      max-width: 210mm;
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+    }
+
+    .btn-action {
+      padding: 0.65rem 1.35rem;
+      border-radius: 99px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-print { background: var(--brand-blue); color: #ffffff; }
+    .btn-print:hover { transform: translateY(-2px); }
+
+    .btn-back { background: #334155; color: #ffffff; text-decoration: none; }
+    .btn-back:hover { background: #475569; }
+
+    /* ==========================================================================
+       WORLD-CLASS EXECUTIVE LETTERHEAD PAPER DESIGN
+       ========================================================================== */
+    .letterhead-paper-frame {
+      width: 210mm;
+      min-height: 297mm;
+      background: #ffffff;
+      margin: 0 auto;
+      position: relative;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.15);
+      border: 1px solid #cbd5e1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* TOP 4-COLOR BRAND STRIPE ACCENT */
+    .paper-top-stripe {
+      height: 7px;
+      width: 100%;
+      background: linear-gradient(90deg, 
+        var(--brand-blue) 0%, var(--brand-blue) 25%, 
+        var(--brand-red) 25%, var(--brand-red) 50%, 
+        var(--brand-silver) 50%, var(--brand-silver) 75%, 
+        var(--brand-green) 75%, var(--brand-green) 100%
+      );
+    }
+
+    /* INNER GEOMETRIC SECURITY BORDER FRAME */
+    .paper-inner-padding {
+      padding: 16mm 18mm 16mm;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* SUBTLE CENTRAL LOGO WATERMARK BACKGROUND */
+    .paper-background-watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 480px;
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* HEADER DESIGN */
+    .paper-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 1.25rem;
+      border-bottom: 2px solid var(--text-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .brand-logo-badge {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo-img {
+      height: 48px;
+      width: auto;
+      background: #000000;
+      padding: 6px 14px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .company-title-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .company-name-text {
+      font-weight: 800;
+      font-size: 1.45rem;
+      letter-spacing: -0.03em;
+      color: var(--text-dark);
+      line-height: 1;
+    }
+
+    .company-tagline-text {
+      font-size: 0.725rem;
+      font-weight: 800;
+      color: var(--brand-blue);
+      letter-spacing: 0.08em;
+      margin-top: 0.25rem;
+      text-transform: uppercase;
+    }
+
+    .header-contact-meta {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .header-contact-meta strong {
+      color: var(--text-dark);
+    }
+
+    /* LETTER METADATA STRIP */
+    .paper-meta-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      margin-bottom: 1.75rem;
+      padding: 0.75rem 1.25rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid var(--brand-blue);
+    }
+
+    /* EDITABLE CONTENT BODY */
+    .paper-body-area {
+      flex-grow: 1;
+      font-size: 0.975rem;
+      line-height: 1.75;
+      color: var(--text-dark);
+      outline: none;
+      margin-bottom: 1.75rem;
+    }
+
+    .paper-subject-heading {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    /* TERMS GOVERNANCE CARD */
+    .paper-terms-card {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .paper-terms-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--brand-blue);
+      border-radius: 10px 0 0 10px;
+    }
+
+    .terms-title-text {
+      font-size: 0.825rem;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .terms-list-items {
+      font-size: 0.76rem;
+      color: #334155;
+      padding-left: 1.2rem;
+      line-height: 1.5;
+    }
+
+    /* FOOTER SIGNATURE & SEAL ROW */
+    .paper-signature-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-top: 1.25rem;
+      border-top: 1.5px solid #cbd5e1;
+      margin-top: 1.25rem;
+    }
+
+    .official-seal-graphic {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .seal-circle-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 2px dashed var(--brand-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 800;
+      color: var(--brand-blue);
+      text-align: center;
+      line-height: 1.1;
+      padding: 2px;
+    }
+
+    .ceo-signature-text {
+      font-family: var(--font-signature);
+      font-size: 2.3rem;
+      color: var(--text-dark);
+      line-height: 1;
+      margin: 0.2rem 0;
+    }
+
+    /* BOTTOM FOOTER BAR */
+    .paper-footer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      margin-top: 1rem;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer-brand-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .f-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .f-dot-blue { background-color: var(--brand-blue); }
+    .f-dot-red { background-color: var(--brand-red); }
+    .f-dot-silver { background-color: var(--brand-silver); }
+    .f-dot-green { background-color: var(--brand-green); }
+
+    .paper-bottom-stripe {
+      height: 5px;
+      width: 100%;
+      background: linear-gradient(90deg, 
+        var(--brand-green) 0%, var(--brand-green) 25%, 
+        var(--brand-silver) 25%, var(--brand-silver) 50%, 
+        var(--brand-red) 50%, var(--brand-red) 75%, 
+        var(--brand-blue) 75%, var(--brand-blue) 100%
+      );
+    }
+
+    /* STRICT A4 PRINT RULES */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+
+      .screen-actions-bar {
+        display: none !important;
+      }
+
+      .letterhead-paper-frame {
+        width: 100% !important;
+        min-height: 100vh !important;
+        box-shadow: none !important;
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Screen Control Bar -->
+  <div class="screen-actions-bar">
+    <div>
+      <strong style="font-size: 1.05rem;">Nexure Studios Official Letterhead Paper Design</strong>
+      <div style="font-size: 0.78rem; color: #94a3b8;">Click any text area below to customize contents before printing!</div>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <a href="index.html" class="btn-action btn-back">← Back to Main Site</a>
+      <button class="btn-action btn-print" onclick="window.print()">🖨️ Print Letterhead / Save PDF</button>
+    </div>
+  </div>
+
+  <!-- A4 Executive Letter Pad Paper Frame -->
+  <div class="letterhead-paper-frame">
+    <!-- Top 4-Color Brand Stripe -->
+    <div class="paper-top-stripe"></div>
+
+    <div class="paper-inner-padding">
+      <!-- Watermark Background Logo -->
+      <img src="assets/logo.png" alt="Nexure Watermark" class="paper-background-watermark">
+
+      <div>
+        <!-- Header Design -->
+        <header class="paper-header">
+          <div class="brand-logo-badge">
+            <img src="assets/logo.png" alt="Nexure Studios Logo" class="brand-logo-img">
+            <div class="company-title-block">
+              <span class="company-name-text">NEXURE STUDIOS</span>
+              <span class="company-tagline-text">WE BUILD THINGS THAT LOOK MADE, NOT GENERATED.</span>
+            </div>
+          </div>
+
+          <div class="header-contact-meta">
+            <div><strong>Web:</strong> nexurestudio.in</div>
+            <div><strong>Email:</strong> nexurestudio1@gmail.com</div>
+            <div><strong>Studio:</strong> Bespoke Web Engineering</div>
+          </div>
+        </header>
+
+        <!-- Metadata Strip -->
+        <div class="paper-meta-strip">
+          <div><strong>Ref ID:</strong> <span contenteditable="true" style="outline: none;">NEX-2026-LTR-9042</span></div>
+          <div><strong>Date:</strong> <span contenteditable="true" style="outline: none;" id="current-date-span">July 26, 2026</span></div>
+          <div><strong>Document Type:</strong> <span style="color: var(--brand-blue); font-weight: 800;">OFFICIAL LETTERHEAD</span></div>
+        </div>
+
+        <!-- Editable Content Body -->
+        <div class="paper-subject-heading" contenteditable="true" style="outline: none;">
+          SUBJECT: BESPOKE WEB DEVELOPMENT PROPOSAL & CLIENT AGREEMENT
+        </div>
+
+        <div class="paper-body-area" contenteditable="true" style="outline: none;">
+          <p style="margin-bottom: 1.15rem;">Dear Client / Partner,</p>
+
+          <p style="margin-bottom: 1.15rem;">
+            This official communication is issued by <strong>Nexure Studios</strong> regarding your digital web platform development. Our studio is built on a single uncompromising core foundation: <em>We build things that look made, not generated.</em>
+          </p>
+
+          <p style="margin-bottom: 1.15rem;">
+            Every layout, micro-interaction, and frontend module is engineered with 100/100 Lighthouse performance, fluid responsive UI animation flow, and Apple San Francisco system typography. We guarantee zero generic templates and zero automated AI visual output.
+          </p>
+
+          <p style="margin-bottom: 1.15rem;">
+            Please review our binding studio terms and conditions below. We look forward to creating an extraordinary digital presence for your brand.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <!-- Terms Governance Card -->
+        <div class="paper-terms-card">
+          <div class="terms-title-text">🔒 Official Terms & Conditions (Nexure Studios)</div>
+          <ol class="terms-list-items">
+            <li>If a customer buys a website made by us, they get access to our future upcoming updates.</li>
+            <li>If a user didn't pay us money for the work used, they must be punished legally.</li>
+            <li>If we make any mistake in websites after saying everything is done, we will give you the whole website for free of cost.</li>
+            <li>Nexure Studio websites are man made (human made), there is no AI involved.</li>
+          </ol>
+        </div>
+
+        <!-- Footer Signature & Seal Row -->
+        <div class="paper-signature-row">
+          <div class="official-seal-graphic">
+            <div class="seal-circle-badge">NEXURE<br>SEAL<br>2026</div>
+            <div>
+              <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 700;">DIGITAL SECURITY HASH</div>
+              <div style="font-size: 0.8rem; color: var(--brand-blue); font-weight: 700; margin-top: 0.15rem;">● SEC-VERIFIED-9042</div>
+            </div>
+          </div>
+
+          <div style="text-align: right;">
+            <div style="font-size: 0.725rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">CEO Authorization & Signature</div>
+            <div class="ceo-signature-text">bhupathi naidu</div>
+            <div style="font-size: 0.85rem; font-weight: 800; color: var(--text-dark);">Bhupathi Naidu</div>
+            <div style="font-size: 0.725rem; color: var(--text-muted);">Chief Executive Officer, Nexure Studios</div>
+          </div>
+        </div>
+
+        <!-- Bottom Footer Bar -->
+        <footer class="paper-footer-bar">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <div class="footer-brand-dots">
+              <span class="f-dot f-dot-blue"></span>
+              <span class="f-dot f-dot-red"></span>
+              <span class="f-dot f-dot-silver"></span>
+              <span class="f-dot f-dot-green"></span>
+            </div>
+            <span>© 2026 Nexure Studios • nexurestudio.in • All rights reserved.</span>
+          </div>
+          <div>Official A4 Letterhead • Page 1 of 1</div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Bottom 4-Color Brand Stripe -->
+    <div class="paper-bottom-stripe"></div>
+  </div>
+
+  <script>
+    document.getElementById('current-date-span').textContent = new Date().toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  </script>
+</body>
+</html>
